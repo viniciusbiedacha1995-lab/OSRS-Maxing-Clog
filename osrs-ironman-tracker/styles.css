@@ -1,15 +1,19 @@
 :root {
-  --bg: #1b1a17;
-  --panel: #26241f;
-  --panel-alt: #2f2c25;
-  --border: #4a4131;
-  --gold: #ffb000;
-  --gold-dim: #cf9a2f;
-  --text: #e8e0cc;
-  --text-dim: #a89f89;
-  --green: #6fbf6f;
-  --red: #d9695f;
-  --radius: 10px;
+  /* OSRS official-site inspired palette: near-black leather/wood bg, bronze borders, gold/orange accents */
+  --bg: #131009;
+  --panel: #1e1810;
+  --panel-alt: #271f14;
+  --border: #4a3c22;
+  --border-bright: #7a5f30;
+  --gold: #c9aa71;
+  --gold-dim: #dd8e26;
+  --gold-bright: #f0cf8e;
+  --text: #e4d8bd;
+  --text-dim: #a3937a;
+  --green: #7c9a5c;
+  --red: #c1594a;
+  --font-display: 'Cinzel', Georgia, 'Times New Roman', serif;
+  --radius: 3px;
 }
 
 * { box-sizing: border-box; }
@@ -17,7 +21,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-  background: linear-gradient(180deg, #1b1a17 0%, #17160f 100%);
+  background: radial-gradient(ellipse at top, #1a140c 0%, var(--bg) 55%);
   color: var(--text);
   min-height: 100vh;
 }
@@ -29,8 +33,9 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px 28px;
-  background: linear-gradient(180deg, #2c2818, #1f1c12);
-  border-bottom: 3px solid var(--gold-dim);
+  background: linear-gradient(180deg, #211a10, var(--bg));
+  border-bottom: 2px solid var(--border-bright);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.5);
 }
 
 .brand {
@@ -43,9 +48,12 @@ body {
 
 .brand h1 {
   margin: 0;
+  font-family: var(--font-display);
   font-size: 22px;
-  color: var(--gold);
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--gold-bright);
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
 }
 
 .subtitle {
@@ -61,8 +69,9 @@ body {
 }
 
 .summary-card {
-  background: var(--panel);
+  background: linear-gradient(180deg, var(--panel-alt), var(--panel));
   border: 1px solid var(--border);
+  border-top-color: var(--border-bright);
   border-radius: var(--radius);
   padding: 8px 16px;
   min-width: 100px;
@@ -129,7 +138,7 @@ main {
 
 .chip.active, .chip:hover {
   border-color: var(--gold-dim);
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .btn-secondary {
@@ -153,7 +162,7 @@ main {
 }
 
 .skill-card {
-  background: var(--panel);
+  background: linear-gradient(180deg, var(--panel-alt), var(--panel));
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
@@ -164,6 +173,8 @@ main {
   border-color: var(--gold);
   box-shadow: 0 0 0 1px var(--gold) inset;
 }
+
+.skill-card.maxed .skill-name { color: var(--gold-bright); }
 
 .skill-card-head {
   display: flex;
@@ -233,9 +244,13 @@ main {
 }
 
 .goals-section h2 {
+  font-family: var(--font-display);
   color: var(--gold);
   font-size: 18px;
+  font-weight: 600;
   margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
 }
 
 .goal-form {
@@ -257,16 +272,16 @@ main {
 .goal-form input { width: 130px; }
 
 .btn-primary {
-  background: var(--gold-dim);
-  border: none;
-  color: #1b1a17;
-  font-weight: 600;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold-dim));
+  border: 1px solid var(--border-bright);
+  color: #241a0a;
+  font-weight: 700;
   padding: 8px 16px;
   border-radius: var(--radius);
   cursor: pointer;
 }
 
-.btn-primary:hover { background: var(--gold); }
+.btn-primary:hover { filter: brightness(1.1); }
 
 .goals-list {
   list-style: none;

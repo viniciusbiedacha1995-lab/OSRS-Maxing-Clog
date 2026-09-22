@@ -4,31 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OSRS Maxing & Clogging — Hash Club</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap">
 <style>
   :root {
-    --ink: #1c2620;
-    --ink-dim: #4c5951;
-    --paper: #eae5d6;
-    --paper-raised: #f4f0e3;
-    --line: #cfc7ae;
-    --brass: #82631f;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --ink: #e9e4d6;
-      --ink-dim: #a9a190;
-      --paper: #141b17;
-      --paper-raised: #1b2420;
-      --line: #333f37;
-      --brass: #d3ac5c;
-    }
+    /* OSRS official-site inspired palette: near-black leather/wood bg, bronze borders, gold/orange accents */
+    --ink: #e4d8bd;
+    --ink-dim: #a3937a;
+    --paper: #131009;
+    --paper-raised: #1e1810;
+    --paper-raised-2: #271f14;
+    --line: #4a3c22;
+    --line-bright: #7a5f30;
+    --gold: #c9aa71;
+    --gold-bright: #f0cf8e;
+    --orange: #dd8e26;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--paper);
+    background: radial-gradient(ellipse at top, #1a140c 0%, var(--paper) 55%);
     color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,25 +32,37 @@
     padding: 24px;
   }
   .wrap { max-width: 480px; width: 100%; }
-  h1 { font-size: 26px; margin: 0 0 6px; }
+  h1 {
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 600;
+    font-size: 26px;
+    margin: 0 0 6px;
+    color: var(--gold-bright);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+  }
   p.sub { color: var(--ink-dim); margin: 0 0 28px; font-size: 14px; }
   .card {
     display: block;
-    background: var(--paper-raised);
+    background: linear-gradient(180deg, var(--paper-raised-2), var(--paper-raised));
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-top-color: var(--line-bright);
+    border-radius: 3px;
     padding: 18px 20px;
     margin-bottom: 14px;
     text-decoration: none;
     color: var(--ink);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.35);
+    transition: border-color 0.15s;
   }
-  .card .title { font-weight: 600; font-size: 16px; }
+  .card:hover { border-color: var(--orange); }
+  .card .title { font-weight: 600; font-size: 16px; color: var(--gold); }
   .card .desc { color: var(--ink-dim); font-size: 13px; margin-top: 4px; }
   .eyebrow {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--brass);
+    color: var(--orange);
     margin-bottom: 6px;
   }
 </style>

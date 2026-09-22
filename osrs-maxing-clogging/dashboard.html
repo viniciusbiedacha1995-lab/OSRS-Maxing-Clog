@@ -1,67 +1,35 @@
 <title>Clog Ledger</title>
 <style>
   :root {
-    --ink: #1c2620;
-    --ink-dim: #4c5951;
-    --paper: #eae5d6;
-    --paper-raised: #f4f0e3;
-    --line: #cfc7ae;
-    --brass: #82631f;
-    --brass-strong: #5f480f;
-    --teal: #276b53;
-    --teal-bg: #dbe9e0;
-    --amber: #8a5a12;
-    --amber-bg: #f0e2c4;
-    --slate: #5c6a70;
-    --slate-bg: #dfe4e2;
-    --rust: #8a3f2f;
-    --rust-bg: #ead9d1;
-    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    /* OSRS official-site inspired palette: near-black leather/wood bg, bronze borders, gold accents */
+    --ink: #e4d8bd;
+    --ink-dim: #a3937a;
+    --paper: #131009;
+    --paper-raised: #1e1810;
+    --paper-raised-2: #271f14;
+    --line: #4a3c22;
+    --line-bright: #7a5f30;
+    --brass: #c9aa71;
+    --brass-strong: #f0cf8e;
+    --orange: #dd8e26;
+    --orange-strong: #f5a83c;
+    --teal: #7c9a5c;
+    --teal-bg: #26301c;
+    --amber: #dd8e26;
+    --amber-bg: #362512;
+    --slate: #ab9c7f;
+    --slate-bg: #241f16;
+    --rust: #c1594a;
+    --rust-bg: #341c16;
+    --font-display: 'Cinzel', Georgia, 'Times New Roman', serif;
     --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ink: #e9e4d6;
-      --ink-dim: #a9a190;
-      --paper: #141b17;
-      --paper-raised: #1b2420;
-      --line: #333f37;
-      --brass: #d3ac5c;
-      --brass-strong: #e8c583;
-      --teal: #6fbf9a;
-      --teal-bg: #1c332a;
-      --amber: #e0ab5a;
-      --amber-bg: #362a15;
-      --slate: #93a19b;
-      --slate-bg: #232d29;
-      --rust: #d68b76;
-      --rust-bg: #33211c;
-    }
-  }
-  :root[data-theme="dark"] {
-    --ink: #e9e4d6;
-    --ink-dim: #a9a190;
-    --paper: #141b17;
-    --paper-raised: #1b2420;
-    --line: #333f37;
-    --brass: #d3ac5c;
-    --brass-strong: #e8c583;
-    --teal: #6fbf9a;
-    --teal-bg: #1c332a;
-    --amber: #e0ab5a;
-    --amber-bg: #362a15;
-    --slate: #93a19b;
-    --slate-bg: #232d29;
-    --rust: #d68b76;
-    --rust-bg: #33211c;
   }
 
   * { box-sizing: border-box; }
 
   body {
-    background: var(--paper);
+    background: radial-gradient(ellipse at top, #1a140c 0%, var(--paper) 55%);
     color: var(--ink);
     font-family: var(--font-body);
     padding: 0 16px 48px;
@@ -74,11 +42,12 @@
   header.top {
     position: sticky;
     top: env(safe-area-inset-top, 0px);
-    background: var(--paper);
-    padding-top: calc(20px + env(safe-area-inset-top, 0px));
-    padding-bottom: 14px;
+    background: linear-gradient(180deg, #211a10 0%, var(--paper) 100%);
+    padding: calc(20px + env(safe-area-inset-top, 0px)) 14px 16px;
+    margin: 0 -14px;
     z-index: 5;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 2px solid var(--line-bright);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.5);
   }
 
   .eyebrow {
@@ -86,7 +55,7 @@
     font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--brass);
+    color: var(--orange-strong);
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -96,9 +65,11 @@
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 30px;
-    margin: 4px 0 2px;
+    margin: 6px 0 2px;
     text-wrap: balance;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.02em;
+    color: var(--brass-strong);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.6);
   }
 
   .sub {
@@ -114,9 +85,10 @@
 
   .stat {
     flex: 1;
-    background: var(--paper-raised);
+    background: linear-gradient(180deg, var(--paper-raised-2), var(--paper-raised));
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-top-color: var(--line-bright);
+    border-radius: 3px;
     padding: 10px 12px;
   }
 
@@ -133,7 +105,7 @@
     font-variant-numeric: tabular-nums;
     font-size: 22px;
     font-weight: 600;
-    color: var(--ink);
+    color: var(--brass);
     margin-top: 2px;
   }
 
@@ -145,14 +117,15 @@
 
   .bar-track {
     height: 6px;
-    background: var(--line);
+    background: #0b0906;
+    border: 1px solid var(--line);
     border-radius: 999px;
     overflow: hidden;
     margin-top: 8px;
   }
   .bar-fill {
     height: 100%;
-    background: var(--brass);
+    background: linear-gradient(90deg, var(--orange), var(--brass-strong));
     border-radius: 999px;
   }
 
@@ -160,12 +133,15 @@
 
   h2 {
     font-family: var(--font-display);
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     margin: 0 0 4px;
     display: flex;
     align-items: baseline;
     gap: 8px;
+    color: var(--brass);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
   }
   h2 .count {
     font-family: var(--font-mono);
@@ -176,15 +152,16 @@
   .section-note {
     color: var(--ink-dim);
     font-size: 13px;
-    margin: 0 0 14px;
+    margin: 8px 0 14px;
   }
 
   .card {
-    background: var(--paper-raised);
+    background: linear-gradient(180deg, var(--paper-raised-2), var(--paper-raised));
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 3px;
     margin-bottom: 10px;
     overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.35);
   }
 
   .card-head {
@@ -200,7 +177,7 @@
   .rank {
     font-family: var(--font-mono);
     font-size: 13px;
-    color: var(--brass);
+    color: var(--orange-strong);
     width: 20px;
     flex-shrink: 0;
     text-align: right;
@@ -240,7 +217,7 @@
   .progress-mini {
     flex: 1;
     height: 4px;
-    background: var(--line);
+    background: #0b0906;
     border-radius: 999px;
     overflow: hidden;
   }
@@ -254,7 +231,7 @@
   }
 
   .chev {
-    color: var(--ink-dim);
+    color: var(--orange-strong);
     font-size: 12px;
     transition: transform 0.15s;
     flex-shrink: 0;
@@ -270,7 +247,7 @@
   }
   .card-body p { margin: 0 0 8px; }
   .card-body p:last-child { margin-bottom: 0; }
-  .card-body strong { color: var(--ink); font-weight: 600; }
+  .card-body strong { color: var(--brass); font-weight: 600; }
 
   .tag {
     display: inline-block;
@@ -281,6 +258,7 @@
     padding: 2px 7px;
     border-radius: 3px;
     margin-right: 4px;
+    border: 1px solid currentColor;
   }
   .tag.banked { background: var(--teal-bg); color: var(--teal); }
   .tag.rng { background: var(--amber-bg); color: var(--amber); }
@@ -296,16 +274,18 @@
     justify-content: space-between;
     padding: 8px 12px;
     background: var(--rust-bg);
-    border-radius: 4px;
+    border: 1px solid var(--rust);
+    border-radius: 3px;
     font-size: 12.5px;
   }
   .discard-item .name { color: var(--ink); }
   .discard-item .why { color: var(--ink-dim); font-family: var(--font-mono); font-size: 11px; }
 
   .checklist {
-    background: var(--paper-raised);
+    background: linear-gradient(180deg, var(--paper-raised-2), var(--paper-raised));
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-top-color: var(--line-bright);
+    border-radius: 3px;
     padding: 14px 16px;
   }
   .checklist ol {
@@ -333,7 +313,7 @@
   }
 </style>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <div class="wrap">
   <header class="top">
