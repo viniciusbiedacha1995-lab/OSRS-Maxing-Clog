@@ -27,6 +27,7 @@ const SKILLS = [
   { id: 'construction', name: 'Construction', icon: '🏠', wikiFile: 'Construction_icon.png', category: 'artisan' },
   { id: 'agility', name: 'Agility', icon: '🏃', wikiFile: 'Agility_icon.png', category: 'support' },
   { id: 'thieving', name: 'Thieving', icon: '🕵️', wikiFile: 'Thieving_icon.png', category: 'support' },
+  { id: 'sailing', name: 'Sailing', icon: '⛵', wikiFile: 'Sailing_icon.png', category: 'support' },
 ];
 
 function skillIconHtml(s) {
