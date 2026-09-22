@@ -9,15 +9,13 @@ function renderCategory(cat) {
   const obtainedCount = cat.items.filter(i => i.obtained === true).length;
   const total = cat.items.length;
 
-  const rows = cat.items.map(item => {
+  const tiles = cat.items.map(item => {
     const selected = isSelected(goals, cat.id, item);
     const cls = statusClass(item.obtained);
     return `
-      <label class="log-row">
-        <input type="checkbox" data-cat="${cat.id}" data-item="${escapeAttr(item.name)}" ${selected ? 'checked' : ''}>
-        <span class="log-item ${cls}"><img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="log-row-name">${item.name}</span>
-        <span class="log-row-status ${cls}">${statusLabel(item.obtained)}</span>
+      <label class="log-item ${cls}" title="${escapeAttr(item.name)} — ${statusLabel(item.obtained)}">
+        <input type="checkbox" class="log-toggle" data-cat="${cat.id}" data-item="${escapeAttr(item.name)}" ${selected ? 'checked' : ''}>
+        <img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'">
       </label>
     `;
   }).join('');
@@ -31,7 +29,7 @@ function renderCategory(cat) {
       </summary>
       <div class="log-cat-body">
         ${cat.note ? `<p class="log-cat-note">${cat.note}</p>` : ''}
-        <div class="log-rows">${rows}</div>
+        <div class="log-grid">${tiles}</div>
         <div class="log-cat-actions">
           <button type="button" class="btn-save" data-cat="${cat.id}">Save selection</button>
           <span class="save-status" data-cat-status="${cat.id}"></span>
