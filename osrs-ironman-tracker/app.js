@@ -308,12 +308,25 @@ function setSyncStatus(text, kind) {
   syncStatus.className = `sync-status ${kind || ''}`;
 }
 
+// TempleOSRS doesn't send CORS headers, so a direct browser fetch gets rejected.
+// Try it straight first (works if that ever changes), then fall back to a public
+// CORS proxy that just relays the same response.
+async function fetchWithCorsFallback(url) {
+  try {
+    const direct = await fetch(url);
+    if (direct.ok) return direct;
+  } catch (e) { /* fall through to proxy */ }
+
+  const proxied = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`);
+  if (!proxied.ok) throw new Error(`HTTP ${proxied.status}`);
+  return proxied;
+}
+
 async function syncFromTempleOSRS(rsn) {
   if (!rsn) return;
   setSyncStatus('Fetching…', 'pending');
   try {
-    const res = await fetch(`https://templeosrs.com/api/player_stats.php?player=${encodeURIComponent(rsn)}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const res = await fetchWithCorsFallback(`https://templeosrs.com/api/player_stats.php?player=${encodeURIComponent(rsn)}`);
     const json = await res.json();
     const data = (json && (json.data || json)) || {};
     let updated = 0;
@@ -339,7 +352,7 @@ async function syncFromTempleOSRS(rsn) {
     renderAll();
     setSyncStatus(`Synced ${updated}/${SKILLS.length} skills (RSN: ${rsn}).`, 'ok');
   } catch (err) {
-    setSyncStatus(`Sync failed (${err.message}). Could be a browser CORS block or a wrong RSN — you can still edit stats manually.`, 'err');
+    setSyncStatus(`Sync failed (${err.message}), even through the CORS proxy fallback. Check the RSN, or edit stats manually.`, 'err');
   }
 }
 
