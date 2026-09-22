@@ -17,6 +17,7 @@
     --amber: #dd8e26;
     --slate: #ab9c7f;
     --slate-bg: #241f16;
+    --rust: #c1594a;
     --font-display: 'Cinzel', Georgia, 'Times New Roman', serif;
     --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
@@ -206,8 +207,9 @@
   .log-item[data-toggle-cat]:hover { filter: brightness(1.2); }
 
   /* Selectable tiles in the category browser: the checkbox covers the whole
-     tile (invisible but clickable/tappable), and an excluded item just
-     darkens on top of whatever obtained/pending look it already has. */
+     tile (invisible but clickable/tappable). Excluded needs to read clearly
+     even against an already-faded pending icon, so it's a color+mark signal
+     (dashed rust border + a cross), not just another layer of opacity. */
   .log-item:has(.log-toggle) { cursor: pointer; }
   .log-toggle {
     position: absolute;
@@ -219,11 +221,23 @@
     cursor: pointer;
     z-index: 2;
   }
+  .log-item:has(.log-toggle:not(:checked)) {
+    opacity: 0.5;
+    filter: grayscale(100%);
+    border-style: dashed;
+    border-color: var(--rust);
+  }
   .log-item:has(.log-toggle:not(:checked))::after {
-    content: '';
+    content: '\2715';
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--rust);
+    background: rgba(0,0,0,0.45);
     border-radius: inherit;
   }
 
