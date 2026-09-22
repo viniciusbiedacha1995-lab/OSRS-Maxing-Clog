@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
       <span class="brand-icon">⚔️</span>
       <div>
         <h1>Ironman Tracker</h1>
-        <p class="subtitle">Old School RuneScape — acompanhe seu caminho até o max</p>
+        <p class="subtitle">Old School RuneScape — track your path to max</p>
       </div>
     </div>
     <div class="summary">
@@ -30,7 +30,7 @@
         <span class="summary-value" id="combatLevel">3</span>
       </div>
       <div class="summary-card">
-        <span class="summary-label">99s alcançados</span>
+        <span class="summary-label">99s reached</span>
         <span class="summary-value" id="maxedCount">0/23</span>
       </div>
     </div>
@@ -39,13 +39,13 @@
   <main>
     <section class="sync-bar">
       <label class="sync-label" for="rsnInput">RSN</label>
-      <input type="text" id="rsnInput" placeholder="Nome do personagem" autocomplete="off">
-      <button class="btn-primary" id="syncBtn">Sincronizar stats</button>
+      <input type="text" id="rsnInput" placeholder="Character name" autocomplete="off">
+      <button class="btn-primary" id="syncBtn">Sync stats</button>
       <span class="sync-status" id="syncStatus"></span>
     </section>
 
     <section class="controls">
-      <input type="text" id="searchBox" placeholder="Buscar skill..." autocomplete="off">
+      <input type="text" id="searchBox" placeholder="Search skill..." autocomplete="off">
       <div class="filter-chips" id="filterChips">
         <button class="chip active" data-filter="all">All</button>
         <button class="chip" data-filter="combat">Combat</button>
@@ -53,24 +53,24 @@
         <button class="chip" data-filter="artisan">Artisan</button>
         <button class="chip" data-filter="support">Support</button>
       </div>
-      <button class="btn-secondary" id="resetBtn">Resetar conta</button>
+      <button class="btn-secondary" id="resetBtn">Reset account</button>
     </section>
 
     <section class="skills-grid" id="skillsGrid"></section>
 
     <section class="goals-section">
-      <h2>🎯 Metas</h2>
+      <h2>🎯 Goals</h2>
       <form class="goal-form" id="goalForm">
         <select id="goalSkill"></select>
         <input type="number" id="goalLevel" min="2" max="99" placeholder="Target level" required>
-        <button type="submit" class="btn-primary">Adicionar meta</button>
+        <button type="submit" class="btn-primary">Add goal</button>
       </form>
       <ul class="goals-list" id="goalsList"></ul>
     </section>
   </main>
 
   <footer>
-    <p>Progresso salvo automaticamente no seu navegador. A sincronização de stats busca dados públicos da API da TempleOSRS pro RSN informado — nada além disso é enviado a nenhum lugar.</p>
+    <p>Progress is saved automatically in your browser. Stat syncing fetches public data from the TempleOSRS API for the RSN entered — nothing else is sent anywhere.</p>
   </footer>
 
   <script src="app.js"></script>

@@ -62,7 +62,7 @@ function levelForXp(xp) {
 }
 
 function fmt(n) {
-  return Math.round(n).toLocaleString('pt-BR');
+  return Math.round(n).toLocaleString('en-US');
 }
 
 // --- State ---
@@ -118,7 +118,7 @@ function renderSkills() {
   });
 
   if (visible.length === 0) {
-    skillsGrid.innerHTML = '<p class="empty-state">Nenhuma skill encontrada.</p>';
+    skillsGrid.innerHTML = '<p class="empty-state">No skills found.</p>';
     return;
   }
 
@@ -149,8 +149,8 @@ function renderSkills() {
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${progressPct}%"></div></div>
         <div class="skill-meta">
-          <span>Próx. nível: ${fmt(xpToNext)} xp</span>
-          <span>Até 99: ${fmt(xpTo99)} xp</span>
+          <span>Next level: ${fmt(xpToNext)} xp</span>
+          <span>To 99: ${fmt(xpTo99)} xp</span>
         </div>
       </div>
     `;
@@ -179,7 +179,7 @@ function computeCombatLevel() {
 
 function renderGoals() {
   if (state.goals.length === 0) {
-    goalsList.innerHTML = '<p class="empty-state">Nenhuma meta ainda. Adicione uma acima.</p>';
+    goalsList.innerHTML = '<p class="empty-state">No goals yet. Add one above.</p>';
     return;
   }
 
@@ -196,9 +196,9 @@ function renderGoals() {
     <li class="goal-item ${g.done ? 'done' : ''}">
       <div class="goal-info">
         <div class="goal-title">${g.skill.icon} ${g.skill.name} → level ${g.targetLevel}</div>
-        <div class="goal-sub">${g.done ? 'Concluído!' : `${fmt(g.remaining)} xp restante`}</div>
+        <div class="goal-sub">${g.done ? 'Done!' : `${fmt(g.remaining)} xp left`}</div>
       </div>
-      <button class="goal-remove" data-id="${g.id}" title="Remover meta">✕</button>
+      <button class="goal-remove" data-id="${g.id}" title="Remove goal">✕</button>
     </li>
   `).join('');
 }
@@ -250,7 +250,7 @@ document.getElementById('filterChips').addEventListener('click', (e) => {
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
-  if (!confirm('Isso vai apagar todo o progresso salvo e recomeçar do zero. Continuar?')) return;
+  if (!confirm('This will erase all saved progress and start over from scratch. Continue?')) return;
   state = defaultState();
   saveState();
   renderAll();
@@ -310,7 +310,7 @@ function setSyncStatus(text, kind) {
 
 async function syncFromTempleOSRS(rsn) {
   if (!rsn) return;
-  setSyncStatus('Buscando…', 'pending');
+  setSyncStatus('Fetching…', 'pending');
   try {
     const res = await fetch(`https://templeosrs.com/api/player_stats.php?player=${encodeURIComponent(rsn)}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -331,21 +331,21 @@ async function syncFromTempleOSRS(rsn) {
     });
 
     if (updated === 0) {
-      setSyncStatus('Resposta recebida, mas nenhuma skill reconhecida. Confira o RSN ou tente de novo mais tarde.', 'warn');
+      setSyncStatus('Response received, but no skills recognized. Check the RSN or try again later.', 'warn');
       return;
     }
 
     saveState();
     renderAll();
-    setSyncStatus(`Sincronizado: ${updated}/${SKILLS.length} skills (RSN: ${rsn}).`, 'ok');
+    setSyncStatus(`Synced ${updated}/${SKILLS.length} skills (RSN: ${rsn}).`, 'ok');
   } catch (err) {
-    setSyncStatus(`Falha ao sincronizar (${err.message}). Pode ser CORS do navegador ou RSN incorreto — dá pra editar manualmente.`, 'err');
+    setSyncStatus(`Sync failed (${err.message}). Could be a browser CORS block or a wrong RSN — you can still edit stats manually.`, 'err');
   }
 }
 
 syncBtn.addEventListener('click', () => {
   const rsn = rsnInput.value.trim();
-  if (!rsn) { setSyncStatus('Informe um RSN.', 'warn'); return; }
+  if (!rsn) { setSyncStatus('Enter an RSN.', 'warn'); return; }
   saveRsn(rsn);
   syncFromTempleOSRS(rsn);
 });
