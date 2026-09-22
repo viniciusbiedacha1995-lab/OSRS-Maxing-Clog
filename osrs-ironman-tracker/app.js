@@ -276,7 +276,7 @@ goalsList.addEventListener('click', (e) => {
   renderGoals();
 });
 
-// --- Hiscores sync (TempleOSRS public API) ---
+// --- Hiscores sync: Wise Old Man first, TempleOSRS as fallback ---
 const RSN_KEY = 'osrs-ironman-tracker-rsn';
 const rsnInput = document.getElementById('rsnInput');
 const syncBtn = document.getElementById('syncBtn');
@@ -308,6 +308,46 @@ function setSyncStatus(text, kind) {
   syncStatus.className = `sync-status ${kind || ''}`;
 }
 
+// Applies a {skillKey: entry} map to state using a per-source field extractor.
+// Returns how many of our skills were matched and updated.
+function applySkillData(dataMap, extractLevelXp) {
+  let updated = 0;
+  SKILLS.forEach(s => {
+    const entry = findSkillEntry(dataMap, s);
+    if (!entry) return;
+    const { level, xp: xpRaw } = extractLevelXp(entry);
+    if (!Number.isFinite(level) || level < 1) return;
+    const xp = Number.isFinite(xpRaw) && xpRaw > 0 ? xpRaw : xpForLevel(level);
+    state.skills[s.id] = { level: Math.min(MAX_LEVEL, level), xp };
+    updated++;
+  });
+  return updated;
+}
+
+// Wise Old Man (wiseoldman.net): a community player-tracking API built for
+// exactly this use case (widgets/bots reading hiscores client-side), so it
+// serves CORS-friendly responses instead of proxying the official Hiscores
+// directly, which don't. If the player isn't tracked yet, ask WOM to fetch
+// them fresh (POST) before reading (GET).
+async function fetchWiseOldMan(rsn) {
+  const url = `https://api.wiseoldman.net/v2/players/${encodeURIComponent(rsn)}`;
+  let res = await fetch(url);
+  if (res.status === 404) {
+    const updateRes = await fetch(url, { method: 'POST' });
+    if (!updateRes.ok) throw new Error(`WOM update HTTP ${updateRes.status}`);
+    res = await fetch(url);
+  }
+  if (!res.ok) throw new Error(`WOM HTTP ${res.status}`);
+  return res.json();
+}
+
+function extractWomSkills(json) {
+  return (json && json.latestSnapshot && json.latestSnapshot.data && json.latestSnapshot.data.skills)
+    || (json && json.data && json.data.skills)
+    || (json && json.skills)
+    || null;
+}
+
 // TempleOSRS doesn't send CORS headers, so a direct browser fetch gets rejected.
 // Try it straight first (works if that ever changes), then fall back to a public
 // CORS proxy that just relays the same response.
@@ -322,37 +362,46 @@ async function fetchWithCorsFallback(url) {
   return proxied;
 }
 
-async function syncFromTempleOSRS(rsn) {
+async function syncStats(rsn) {
   if (!rsn) return;
   setSyncStatus('Fetching…', 'pending');
+
+  try {
+    const womJson = await fetchWiseOldMan(rsn);
+    const skills = extractWomSkills(womJson);
+    const updated = skills ? applySkillData(skills, entry => ({
+      level: Number(entry.level),
+      xp: Number(entry.experience),
+    })) : 0;
+    if (updated > 0) {
+      saveState();
+      renderAll();
+      setSyncStatus(`Synced ${updated}/${SKILLS.length} skills via Wise Old Man (RSN: ${rsn}).`, 'ok');
+      return;
+    }
+  } catch (womErr) {
+    console.warn('Wise Old Man sync failed, falling back to TempleOSRS:', womErr);
+  }
+
   try {
     const res = await fetchWithCorsFallback(`https://templeosrs.com/api/player_stats.php?player=${encodeURIComponent(rsn)}`);
     const json = await res.json();
     const data = (json && (json.data || json)) || {};
-    let updated = 0;
-
-    SKILLS.forEach(s => {
-      const entry = findSkillEntry(data, s);
-      if (!entry) return;
-      const level = Number(entry.level);
-      if (!Number.isFinite(level) || level < 1) return;
-      const xpRaw = entry.experience ?? entry.xp ?? entry.exp;
-      const xpNum = Number(xpRaw);
-      const xp = Number.isFinite(xpNum) && xpNum > 0 ? xpNum : xpForLevel(level);
-      state.skills[s.id] = { level: Math.min(MAX_LEVEL, level), xp };
-      updated++;
-    });
+    const updated = applySkillData(data, entry => ({
+      level: Number(entry.level),
+      xp: Number(entry.experience ?? entry.xp ?? entry.exp),
+    }));
 
     if (updated === 0) {
-      setSyncStatus('Response received, but no skills recognized. Check the RSN or try again later.', 'warn');
+      setSyncStatus('Got a response, but no skills were recognized on either source. Check the RSN, or edit stats manually.', 'warn');
       return;
     }
 
     saveState();
     renderAll();
-    setSyncStatus(`Synced ${updated}/${SKILLS.length} skills (RSN: ${rsn}).`, 'ok');
+    setSyncStatus(`Synced ${updated}/${SKILLS.length} skills via TempleOSRS (RSN: ${rsn}).`, 'ok');
   } catch (err) {
-    setSyncStatus(`Sync failed (${err.message}), even through the CORS proxy fallback. Check the RSN, or edit stats manually.`, 'err');
+    setSyncStatus(`Sync failed on every source (${err.message}). You can still edit stats manually.`, 'err');
   }
 }
 
@@ -360,7 +409,7 @@ syncBtn.addEventListener('click', () => {
   const rsn = rsnInput.value.trim();
   if (!rsn) { setSyncStatus('Enter an RSN.', 'warn'); return; }
   saveRsn(rsn);
-  syncFromTempleOSRS(rsn);
+  syncStats(rsn);
 });
 
 rsnInput.addEventListener('keydown', (e) => {
@@ -371,4 +420,4 @@ rsnInput.addEventListener('keydown', (e) => {
 rsnInput.value = loadRsn();
 populateGoalSkillSelect();
 renderAll();
-syncFromTempleOSRS(rsnInput.value);
+syncStats(rsnInput.value);
