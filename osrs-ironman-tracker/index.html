@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSRS Ironman Tracker</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">⚔️</span>
+      <div>
+        <h1>Ironman Tracker</h1>
+        <p class="subtitle">Old School RuneScape — acompanhe seu caminho até o max</p>
+      </div>
+    </div>
+    <div class="summary">
+      <div class="summary-card">
+        <span class="summary-label">Total Level</span>
+        <span class="summary-value" id="totalLevel">23</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Total XP</span>
+        <span class="summary-value" id="totalXp">1,154</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Combat Level</span>
+        <span class="summary-value" id="combatLevel">3</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">99s alcançados</span>
+        <span class="summary-value" id="maxedCount">0/23</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls">
+      <input type="text" id="searchBox" placeholder="Buscar skill..." autocomplete="off">
+      <div class="filter-chips" id="filterChips">
+        <button class="chip active" data-filter="all">Todas</button>
+        <button class="chip" data-filter="combat">Combate</button>
+        <button class="chip" data-filter="gathering">Coleta</button>
+        <button class="chip" data-filter="artisan">Artesanato</button>
+        <button class="chip" data-filter="support">Suporte</button>
+      </div>
+      <button class="btn-secondary" id="resetBtn">Resetar conta</button>
+    </section>
+
+    <section class="skills-grid" id="skillsGrid"></section>
+
+    <section class="goals-section">
+      <h2>🎯 Metas</h2>
+      <form class="goal-form" id="goalForm">
+        <select id="goalSkill"></select>
+        <input type="number" id="goalLevel" min="2" max="99" placeholder="Nível alvo" required>
+        <button type="submit" class="btn-primary">Adicionar meta</button>
+      </form>
+      <ul class="goals-list" id="goalsList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Progresso salvo automaticamente no seu navegador. Nada é enviado pra nenhum lugar.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

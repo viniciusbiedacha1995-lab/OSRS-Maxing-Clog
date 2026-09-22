@@ -1,0 +1,607 @@
+<title>Clog Ledger</title>
+<style>
+  :root {
+    --ink: #1c2620;
+    --ink-dim: #4c5951;
+    --paper: #eae5d6;
+    --paper-raised: #f4f0e3;
+    --line: #cfc7ae;
+    --brass: #82631f;
+    --brass-strong: #5f480f;
+    --teal: #276b53;
+    --teal-bg: #dbe9e0;
+    --amber: #8a5a12;
+    --amber-bg: #f0e2c4;
+    --slate: #5c6a70;
+    --slate-bg: #dfe4e2;
+    --rust: #8a3f2f;
+    --rust-bg: #ead9d1;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #e9e4d6;
+      --ink-dim: #a9a190;
+      --paper: #141b17;
+      --paper-raised: #1b2420;
+      --line: #333f37;
+      --brass: #d3ac5c;
+      --brass-strong: #e8c583;
+      --teal: #6fbf9a;
+      --teal-bg: #1c332a;
+      --amber: #e0ab5a;
+      --amber-bg: #362a15;
+      --slate: #93a19b;
+      --slate-bg: #232d29;
+      --rust: #d68b76;
+      --rust-bg: #33211c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #e9e4d6;
+    --ink-dim: #a9a190;
+    --paper: #141b17;
+    --paper-raised: #1b2420;
+    --line: #333f37;
+    --brass: #d3ac5c;
+    --brass-strong: #e8c583;
+    --teal: #6fbf9a;
+    --teal-bg: #1c332a;
+    --amber: #e0ab5a;
+    --amber-bg: #362a15;
+    --slate: #93a19b;
+    --slate-bg: #232d29;
+    --rust: #d68b76;
+    --rust-bg: #33211c;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    padding: 0 16px 48px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .wrap { max-width: 640px; margin: 0 auto; }
+
+  header.top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    background: var(--paper);
+    padding-top: calc(20px + env(safe-area-inset-top, 0px));
+    padding-bottom: 14px;
+    z-index: 5;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brass);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 30px;
+    margin: 4px 0 2px;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    color: var(--ink-dim);
+    font-size: 13.5px;
+    margin: 0 0 16px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .stat {
+    flex: 1;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 10px 12px;
+  }
+
+  .stat .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .stat .value {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 2px;
+  }
+
+  .stat .value small {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-dim);
+  }
+
+  .bar-track {
+    height: 6px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--brass);
+    border-radius: 999px;
+  }
+
+  section { margin-top: 30px; }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  h2 .count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-dim);
+    font-weight: 400;
+  }
+  .section-note {
+    color: var(--ink-dim);
+    font-size: 13px;
+    margin: 0 0 14px;
+  }
+
+  .card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .card-head::-webkit-details-marker { display: none; }
+
+  .rank {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--brass);
+    width: 20px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .card-main { flex: 1; min-width: 0; }
+
+  .card-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .card-name {
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+
+  .hours {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    gap: 10px;
+  }
+
+  .progress-mini {
+    flex: 1;
+    height: 4px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-mini-fill { height: 100%; background: var(--teal); }
+
+  .frac {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-dim);
+    flex-shrink: 0;
+  }
+
+  .chev {
+    color: var(--ink-dim);
+    font-size: 12px;
+    transition: transform 0.15s;
+    flex-shrink: 0;
+  }
+  details[open] .chev { transform: rotate(90deg); }
+
+  .card-body {
+    padding: 0 14px 14px 46px;
+    font-size: 13px;
+    color: var(--ink-dim);
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+  .card-body p { margin: 0 0 8px; }
+  .card-body p:last-child { margin-bottom: 0; }
+  .card-body strong { color: var(--ink); font-weight: 600; }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-right: 4px;
+  }
+  .tag.banked { background: var(--teal-bg); color: var(--teal); }
+  .tag.rng { background: var(--amber-bg); color: var(--amber); }
+  .tag.shop { background: var(--slate-bg); color: var(--slate); }
+
+  .discard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .discard-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--rust-bg);
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+  .discard-item .name { color: var(--ink); }
+  .discard-item .why { color: var(--ink-dim); font-family: var(--font-mono); font-size: 11px; }
+
+  .checklist {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+  .checklist ol {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .checklist li {
+    margin-bottom: 9px;
+    font-size: 13px;
+  }
+  .checklist li:last-child { margin-bottom: 0; }
+  .checklist li strong { color: var(--brass-strong); }
+
+  footer {
+    margin-top: 36px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-dim);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow"><span>Hash Club &middot; Ironman</span><span>20 set 2026</span></div>
+    <h1>Clog Ledger</h1>
+    <p class="sub">Plano de collection log &mdash; banco de moedas e fila de prioridade</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="label">Slots hoje</div>
+        <div class="value">796 <small>/ 1.200</small></div>
+        <div class="bar-track"><div class="bar-fill" style="width:66.3%"></div></div>
+      </div>
+      <div class="stat">
+        <div class="label">Plano ativo dá</div>
+        <div class="value">+112 <small>slots</small></div>
+      </div>
+      <div class="stat">
+        <div class="label">Horas mapeadas</div>
+        <div class="value">~110<small>h</small></div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Prontas pra converter <span class="count">0h de farm</span></h2>
+    <p class="section-note">Moeda já banked. Só falta gastar no dia do último 99.</p>
+
+    <div class="card">
+      <div class="card-head" style="cursor:default">
+        <span class="rank">&mdash;</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Brimhaven Agility Arena</span>
+            <span class="hours">0h</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:100%"></div></div>
+            <span class="frac">1.050 / 1.050 vouchers</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body" style="padding-left:14px">
+        <span class="tag banked">banked</span> Converte log 2/9 &rarr; 9/9. Gasto no dia do max: Pirate's hook (800) + recolor graceful (250).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head" style="cursor:default">
+        <span class="rank">&mdash;</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Colossal Wyrm Agility Course</span>
+            <span class="hours">0h</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:100%"></div></div>
+            <span class="frac">1.591 / 1.590 termites</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body" style="padding-left:14px">
+        <span class="tag banked">banked</span> Converte log 0/8 &rarr; 8/8. Gasto no dia do max: teleport scroll (40) + Graceful crafting kit (650) + calcified acorn (900). Não precisa de giant squirrel.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fila de prioridade <span class="count">8 sistemas, por horas</span></h2>
+    <p class="section-note">Ordenado do mais rápido pro mais lento. Toque num item pra ver os detalhes.</p>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">1</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Vale Totems</span>
+            <span class="hours">~0h extra</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:0%"></div></div>
+            <span class="frac">log 0/4</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag shop">loja</span><strong>Decidido:</strong> Fletching 92&rarr;99 vai ser treinado nos totems de redwood &mdash; as 80.000 offerings (800 research points) saem de graça no caminho.</p>
+        <p>Faltam: Bow string spool, Fletching knife, Ent branch, Greenman mask. Fecha o log comprando e revendendo em ordem decrescente (mask&rarr;knife&rarr;spool&rarr;branch).</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">2</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Shades of Mort'ton</span>
+            <span class="hours">~3,5&ndash;10h</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:21%"></div></div>
+            <span class="frac">log 3/14</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag rng">RNG</span> Já tem: <strong>Amulet of the Damned, Flamtaer bag, Fine cloth</strong> &mdash; os itens mais incertos já caíram.</p>
+        <p>Faltam: 5 locks (bronze&rarr;gold, rápidos), 4 peças de Zealot (só Gold Chest, 1/128 cada rolagem), Tree wizards' journal e Bloody notes (1x cada). Gargalo real são as 4 peças de Zealot.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">3</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Tithe Farm</span>
+            <span class="hours">~7,4&ndash;10h</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:29%"></div></div>
+            <span class="frac">log 2/7</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag shop">loja</span> Já tem: <strong>Farmer's strawhat, Herb sack.</strong> Zero RNG, 100% loja do Farmer Gricoller.</p>
+        <p>Faltam: Farmer's jacket (150), Farmer's boro trousers (125), Farmer's boots (50), Seed box (250), Gricoller's can (200) &mdash; 775 Tithe points no total, 0 banked hoje.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">4</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Castle Wars</span>
+            <span class="hours">~13h</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:0%"></div></div>
+            <span class="frac">log 0/39</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag shop">loja</span> 21 tickets guardados, mas <strong>0 itens comprados ainda</strong> &mdash; guardar ticket não conta no log. Corte decidido: 100 tickets de pico &rarr; 31 slots.</p>
+        <p>Faltam 79 tickets a ~6/h. Testar primeiro: Decorative helm por 4 tickets, comprar e revender, conferir se loga.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">5</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Magic Training Arena</span>
+            <span class="hours">~24,8h</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:18%"></div></div>
+            <span class="frac">log 2/11</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag shop">loja</span> Já tem: <strong>Infinity boots, Bones to peaches.</strong> Zero RNG, 4 salas com moeda própria (Pizazz points).</p>
+        <p>Faltam: os 4 wands, Infinity hat/top/bottoms/gloves, Mage's book. Sem desvantagem de Ironman, tudo ganho jogando.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">6</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Barbarian Assault</span>
+            <span class="hours">~3h + 15&ndash;30h RNG</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:30%"></div></div>
+            <span class="frac">log 3/11 &middot; meta 10/11</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag rng">RNG</span> Já tem: <strong>Fighter hat, Fighter torso, Granite body</strong> &mdash; as 3 peças mais caras/incertas já fechadas.</p>
+        <p><strong>Pet Penance Queen fora do plano</strong> (decidido) &mdash; meta é 10/11, não 11/11. Faltam 6 itens de loja determinística (~1.160 honour points, poucas horas) + Granite helm via High Gamble (RNG 1/32, gargalo real).</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">7</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Trouble Brewing</span>
+            <span class="hours">~31h</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:0%"></div></div>
+            <span class="frac">log 0/30</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag shop">loja</span> Corte decidido: até "Gilded smile" &rarr; 21.590 pieces of eight, sem revenda, 26 slots.</p>
+        <p>Ritmo ~700 pieces/h com ~17 rum do time. 0 banked hoje. Calibrar taxa real com 3 partidas antes de confiar na estimativa.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary class="card-head">
+        <span class="rank">8</span>
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-name">Gnome Restaurant</span>
+            <span class="hours">não calculado</span>
+          </div>
+          <div class="card-meta">
+            <div class="progress-mini"><div class="progress-mini-fill" style="width:0%"></div></div>
+            <span class="frac">log 0/4</span>
+          </div>
+        </div>
+        <span class="chev">&#9656;</span>
+      </summary>
+      <div class="card-body">
+        <p><span class="tag rng">RNG</span> Sem moeda &mdash; tips aleatórias em hard deliveries de 6 clientes específicos (Gnome scarf/goggles 1/17, Grand seed pod 1/22, Mint cake taxa desconhecida).</p>
+        <p>Pendente: confirmar se já fez as quests Grand Tree e Fishing Contest (libera o melhor alvo de entrega, Captain Ninto).</p>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <h2>Checklist do dia do max</h2>
+    <div class="checklist">
+      <ol>
+        <li>Ter em mãos: 2 sets de graceful sem cor, &ge;100 tickets de Castle Wars, &ge;21.590 pieces de Trouble Brewing, &ge;80.000 Vale offerings.</li>
+        <li><strong>Castle Wars</strong> &mdash; comprar e revender até fechar os 31 slots (pico 100 tickets).</li>
+        <li><strong>Brimhaven</strong> &mdash; hook (800) + recolor (250) &rarr; log 9/9.</li>
+        <li><strong>Colossal Wyrm</strong> &mdash; teleport scroll (40) + calcified acorn (900) + Graceful crafting kit (650) &rarr; log 8/8.</li>
+        <li><strong>Trouble Brewing</strong> &mdash; comprar em ordem até Gilded smile (21.590 pieces).</li>
+        <li><strong>Vale Totems</strong> &mdash; hasty-rummage, depois mask&rarr;knife&rarr;spool&rarr;branch em ordem decrescente &rarr; log 4/4.</li>
+        <li>Somar tudo e comparar com a projeção: 872 slots.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fora do plano</h2>
+    <div class="discard-list">
+      <div class="discard-item"><span class="name">Volcanic Mine</span><span class="why">4/8 &middot; não vai fazer</span></div>
+      <div class="discard-item"><span class="name">Mastering Mixology</span><span class="why">2/7 &middot; descartado</span></div>
+      <div class="discard-item"><span class="name">Last Man Standing</span><span class="why">4/32 &middot; descartado</span></div>
+      <div class="discard-item"><span class="name">Hallowed Sepulchre</span><span class="why">13/16 &middot; descartado</span></div>
+      <div class="discard-item"><span class="name">Soul Wars</span><span class="why">0/3 &middot; descartado</span></div>
+      <div class="discard-item"><span class="name">Pet Penance Queen</span><span class="why">dentro de Barbarian Assault &middot; fora da meta</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>RSN: Hash Club</span>
+    <span>Dados via API TempleOSRS &middot; 20/09/2026</span>
+  </footer>
+</div>
