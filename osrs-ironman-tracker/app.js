@@ -188,20 +188,43 @@ function renderGoals() {
     return;
   }
 
+  let needsSave = false;
+
   const enriched = state.goals.map(g => {
     const skill = SKILLS.find(s => s.id === g.skill);
     const data = state.skills[g.skill];
     const targetXp = xpForLevel(g.targetLevel);
-    const remaining = Math.max(0, targetXp - data.xp);
+
+    // A goal tracks progress from the xp you actually had when you set it,
+    // not the flat xp floor of your level at the time — so it always starts
+    // at 0% and fills in from there, not from wherever you already were
+    // within that level. Goals created before this field existed get a
+    // one-time snapshot taken now.
+    if (typeof g.startXp !== 'number') {
+      g.startXp = data.xp;
+      needsSave = true;
+    }
+
     const done = data.level >= g.targetLevel;
-    return { ...g, skill, remaining, done };
+    const remaining = Math.max(0, targetXp - data.xp);
+    const span = Math.max(1, targetXp - g.startXp);
+    const gained = Math.max(0, data.xp - g.startXp);
+    const progressPct = done ? 100 : Math.min(100, (gained / span) * 100);
+
+    return { ...g, skill, targetXp, remaining, done, progressPct };
   }).sort((a, b) => a.remaining - b.remaining);
+
+  if (needsSave) saveState();
 
   goalsList.innerHTML = enriched.map(g => `
     <li class="goal-item ${g.done ? 'done' : ''}">
       <div class="goal-info">
         <div class="goal-title">${g.skill.icon} ${g.skill.name} → level ${g.targetLevel}</div>
-        <div class="goal-sub">${g.done ? 'Done!' : `${fmt(g.remaining)} xp left`}</div>
+        <div class="goal-progress-bar"><div class="goal-progress-fill" style="width:${g.progressPct}%"></div></div>
+        <div class="goal-sub">${g.done
+          ? 'Done!'
+          : `${fmt(g.startXp)} → ${fmt(g.targetXp)} xp &middot; ${fmt(g.remaining)} xp left &middot; ${g.progressPct.toFixed(1)}%`}
+        </div>
       </div>
       <button class="goal-remove" data-id="${g.id}" title="Remove goal">✕</button>
     </li>
@@ -267,7 +290,7 @@ document.getElementById('goalForm').addEventListener('submit', (e) => {
   const targetLevel = Math.max(2, Math.min(MAX_LEVEL, parseInt(document.getElementById('goalLevel').value, 10)));
   if (!skill || Number.isNaN(targetLevel)) return;
 
-  state.goals.push({ id: Date.now().toString(36), skill, targetLevel });
+  state.goals.push({ id: Date.now().toString(36), skill, targetLevel, startXp: state.skills[skill].xp });
   saveState();
   renderGoals();
   document.getElementById('goalLevel').value = '';
