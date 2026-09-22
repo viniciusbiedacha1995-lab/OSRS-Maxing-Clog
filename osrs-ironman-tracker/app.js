@@ -39,13 +39,17 @@ function skillIconHtml(s) {
 
 // --- OSRS XP <-> level math ---
 const XP_TABLE = (() => {
-  const table = [0];
+  // XP_TABLE[level] = total xp required to REACH that level (level 1 = 0).
+  // The classic formula sums contributions for n = 1..(level-1), so each
+  // term computed for n is the threshold for n+1, not n — the table is
+  // pre-seeded with two zeros (indices 0 and 1) to keep that shift lined up.
+  const table = [0, 0];
   let total = 0;
-  for (let level = 1; level < 100; level++) {
-    total += Math.floor(level + 300 * Math.pow(2, level / 7));
+  for (let n = 1; n <= 98; n++) {
+    total += Math.floor(n + 300 * Math.pow(2, n / 7));
     table.push(Math.floor(total / 4));
   }
-  return table; // XP_TABLE[level] = total xp required to REACH that level (level 1 = 0)
+  return table;
 })();
 
 function xpForLevel(level) {
