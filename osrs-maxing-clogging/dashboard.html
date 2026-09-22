@@ -154,6 +154,32 @@
     border-radius: 999px;
   }
 
+  .bar-track.multi { display: flex; }
+  .bar-seg { height: 100%; }
+  .bar-seg.seg-current { background: linear-gradient(90deg, var(--orange), var(--brass-strong)); }
+  .bar-seg.seg-banked { background: var(--teal); }
+  .bar-seg.seg-planned { background: var(--slate); }
+
+  .bar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-dim);
+  }
+  .bar-legend .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    margin-right: 5px;
+  }
+  .bar-legend .dot.seg-current { background: var(--brass-strong); }
+  .bar-legend .dot.seg-banked { background: var(--teal); }
+  .bar-legend .dot.seg-planned { background: var(--slate); }
+
   section { margin-top: 30px; }
 
   h2 {
@@ -354,7 +380,16 @@
       <div class="stat">
         <div class="label">Slots hoje</div>
         <div class="value">796 <small>/ 1.200</small></div>
-        <div class="bar-track"><div class="bar-fill" style="width:66.3%"></div></div>
+        <div class="bar-track multi">
+          <div class="bar-seg seg-current" style="width:66.33%"></div>
+          <div class="bar-seg seg-banked" style="width:1.25%"></div>
+          <div class="bar-seg seg-planned" style="width:5.08%"></div>
+        </div>
+        <div class="bar-legend">
+          <span><span class="dot seg-current"></span>796 hoje</span>
+          <span><span class="dot seg-banked"></span>811 banked</span>
+          <span><span class="dot seg-planned"></span>872 plano</span>
+        </div>
       </div>
       <div class="stat">
         <div class="label">Plano ativo dá</div>
