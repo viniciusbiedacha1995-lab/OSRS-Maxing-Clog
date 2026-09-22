@@ -56,7 +56,6 @@ function renderCategories() {
 
 function renderAll() {
   renderCategories();
-  renderMyGoalsInto('myGoalsList', 'myGoalsSummary', false);
 }
 
 function cssEscape(s) {
@@ -83,8 +82,6 @@ document.addEventListener('click', (e) => {
     statusEl.textContent = 'Saved.';
     setTimeout(() => { statusEl.textContent = ''; }, 2000);
   }
-
-  renderMyGoalsInto('myGoalsList', 'myGoalsSummary', false);
 });
 
 renderAll();
