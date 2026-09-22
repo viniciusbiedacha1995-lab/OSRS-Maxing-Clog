@@ -14,7 +14,7 @@ function renderCategory(cat) {
     const cls = statusClass(item.obtained);
     return `
       <label class="log-item ${cls}" title="${escapeAttr(item.name)} — ${statusLabel(item.obtained)}">
-        <input type="checkbox" class="log-toggle" data-cat="${cat.id}" data-item="${escapeAttr(item.name)}" ${selected ? 'checked' : ''}>
+        <input type="checkbox" class="log-toggle" autocomplete="off" data-cat="${cat.id}" data-item="${escapeAttr(item.name)}" ${selected ? 'checked' : ''}>
         <img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'">
       </label>
     `;
