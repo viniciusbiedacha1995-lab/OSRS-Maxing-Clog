@@ -158,7 +158,6 @@ const CATEGORIES = [
       { name: 'Ranged set piece #1', obtained: false, icon: 'Castle_wars_ticket' },
       { name: 'Ranged set piece #2', obtained: false, icon: 'Castle_wars_ticket' },
       { name: 'Ranged set piece #3', obtained: false, icon: 'Castle_wars_ticket' },
-      { name: 'White helm', obtained: false, icon: 'Castle_wars_ticket' },
       { name: 'White full helm', obtained: false, icon: 'Castle_wars_ticket' },
       { name: 'White boots', obtained: false, icon: 'Castle_wars_ticket' },
       { name: 'White sword', obtained: false, icon: 'Castle_wars_ticket' },
