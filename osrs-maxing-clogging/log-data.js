@@ -589,17 +589,23 @@ function effectiveStatusLabel(cls) {
 }
 
 // Renders the "My Goals" section (same accordion look as the category browser)
-// into the two given element ids. Used by both log-browser.html and
-// dashboard.html so a goal saved on one page shows up identically on the
-// other. Tiles are interactive here (unlike the read-only status elsewhere):
-// clicking a non-obtained item toggles it between pending and secured.
-function renderMyGoalsInto(listId, summaryId) {
+// into the two given element ids.
+//
+// `interactive` controls what this list is for, since the same selected
+// items get shown on two different pages with two different jobs:
+//   - Log Browser (interactive=false): read-only preview of what's selected
+//     there, showing real obtained/pending status only. This is the
+//     selector — it doesn't know about "secured".
+//   - Clog Ledger (interactive=true): the ongoing tracker. Tiles are
+//     clickable here, toggling a non-obtained item between pending and
+//     secured (e.g. the currency to buy it is already banked).
+function renderMyGoalsInto(listId, summaryId, interactive) {
   const list = document.getElementById(listId);
   const summary = document.getElementById(summaryId);
   if (!list) return;
 
   const goals = loadGoals();
-  const secured = loadSecured();
+  const secured = interactive ? loadSecured() : {};
   const byCat = CATEGORIES.map(cat => ({
     cat,
     items: cat.items.filter(item => isSelected(goals, cat.id, item)),
@@ -618,14 +624,15 @@ function renderMyGoalsInto(listId, summaryId) {
   const catsHtml = byCat.map(({ cat, items }) => {
     const obtained = items.filter(i => i.obtained === true).length;
     const tiles = items.map(item => {
-      const cls = effectiveStatus(item, secured, cat.id);
+      const cls = interactive ? effectiveStatus(item, secured, cat.id) : statusClass(item.obtained);
       if (cls === 'obtained') obtainedTotal++;
       else if (cls === 'secured') securedTotal++;
       else pendingTotal++;
 
-      const clickable = cls !== 'obtained';
+      const clickable = interactive && cls !== 'obtained';
       const attrs = clickable ? `data-toggle-cat="${cat.id}" data-toggle-item="${escapeAttr(item.name)}"` : '';
-      return `<span class="log-item ${cls}" ${attrs} title="${escapeAttr(item.name)} — ${effectiveStatusLabel(cls)}"><img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'"></span>`;
+      const label = interactive ? effectiveStatusLabel(cls) : statusLabel(item.obtained);
+      return `<span class="log-item ${cls}" ${attrs} title="${escapeAttr(item.name)} — ${label}"><img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'"></span>`;
     }).join('');
     return `
       <details class="log-cat" open>
@@ -642,7 +649,9 @@ function renderMyGoalsInto(listId, summaryId) {
   }).join('');
 
   if (summary) {
-    summary.textContent = `${total} items targeted · ${obtainedTotal} obtained · ${securedTotal} secured · ${pendingTotal} pending (click a tile to mark/unmark secured)`;
+    summary.textContent = interactive
+      ? `${total} items targeted · ${obtainedTotal} obtained · ${securedTotal} secured · ${pendingTotal} pending (click a tile to mark/unmark secured)`
+      : `${total} items targeted · ${obtainedTotal} already obtained · ${total - obtainedTotal} still needed`;
   }
   list.innerHTML = catsHtml;
 }
@@ -661,7 +670,7 @@ document.addEventListener('click', (e) => {
   setSecured(catId, itemName, nowSecured);
 
   ['myGoalsList'].forEach(listId => {
-    if (document.getElementById(listId)) renderMyGoalsInto(listId, 'myGoalsSummary');
+    if (document.getElementById(listId)) renderMyGoalsInto(listId, 'myGoalsSummary', true);
   });
   if (typeof window.onGoalsChanged === 'function') window.onGoalsChanged();
 });

@@ -56,7 +56,7 @@ function renderCategories() {
 
 function renderAll() {
   renderCategories();
-  renderMyGoalsInto('myGoalsList', 'myGoalsSummary');
+  renderMyGoalsInto('myGoalsList', 'myGoalsSummary', false);
 }
 
 function cssEscape(s) {
@@ -84,7 +84,7 @@ document.addEventListener('click', (e) => {
     setTimeout(() => { statusEl.textContent = ''; }, 2000);
   }
 
-  renderMyGoalsInto('myGoalsList', 'myGoalsSummary');
+  renderMyGoalsInto('myGoalsList', 'myGoalsSummary', false);
 });
 
 renderAll();
