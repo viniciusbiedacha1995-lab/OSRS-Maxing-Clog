@@ -315,6 +315,56 @@
   .tag.rng { background: var(--amber-bg); color: var(--amber); }
   .tag.shop { background: var(--slate-bg); color: var(--slate); }
 
+  .log-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 4px 0 10px;
+  }
+  .log-item {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0b0906;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .log-item img {
+    max-width: 24px;
+    max-height: 24px;
+    image-rendering: pixelated;
+  }
+  .log-item.pending {
+    opacity: 0.28;
+    filter: grayscale(75%);
+  }
+  .log-item.obtained {
+    opacity: 1;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 1px var(--teal) inset;
+    background: var(--teal-bg);
+  }
+  .log-legend {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-dim);
+    margin: 0 0 8px;
+  }
+  .log-legend .swatch {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    margin: 0 4px 0 10px;
+    vertical-align: middle;
+  }
+  .log-legend .swatch:first-child { margin-left: 0; }
+  .log-legend .swatch.obtained { background: var(--teal); }
+  .log-legend .swatch.pending { background: var(--ink-dim); opacity: 0.4; }
+
   .discard-list {
     display: flex;
     flex-direction: column;
@@ -373,38 +423,38 @@
 
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow"><span>Hash Club &middot; Ironman</span><span>20 set 2026</span></div>
+    <div class="eyebrow"><span>Hash Club &middot; Ironman</span><span>20 Sep 2026</span></div>
     <h1>Clog Ledger</h1>
-    <p class="sub">Plano de collection log &mdash; banco de moedas e fila de prioridade</p>
+    <p class="sub">Collection log plan &mdash; currency bank and priority queue</p>
     <div class="stat-row">
       <div class="stat">
-        <div class="label">Slots hoje</div>
-        <div class="value">796 <small>/ 1.200</small></div>
+        <div class="label">Slots today</div>
+        <div class="value">796 <small>/ 1,200</small></div>
         <div class="bar-track multi">
           <div class="bar-seg seg-current" style="width:66.33%"></div>
           <div class="bar-seg seg-banked" style="width:1.25%"></div>
           <div class="bar-seg seg-planned" style="width:5.08%"></div>
         </div>
         <div class="bar-legend">
-          <span><span class="dot seg-current"></span>796 hoje</span>
+          <span><span class="dot seg-current"></span>796 today</span>
           <span><span class="dot seg-banked"></span>811 banked</span>
-          <span><span class="dot seg-planned"></span>872 plano</span>
+          <span><span class="dot seg-planned"></span>872 plan</span>
         </div>
       </div>
       <div class="stat">
-        <div class="label">Plano ativo dá</div>
+        <div class="label">Active plan gives</div>
         <div class="value">+112 <small>slots</small></div>
       </div>
       <div class="stat">
-        <div class="label">Horas mapeadas</div>
+        <div class="label">Hours mapped</div>
         <div class="value">~110<small>h</small></div>
       </div>
     </div>
   </header>
 
   <section>
-    <h2>Prontas pra converter <span class="count">0h de farm</span></h2>
-    <p class="section-note">Moeda já banked. Só falta gastar no dia do último 99.</p>
+    <h2>Ready to convert <span class="count">0h of farming</span></h2>
+    <p class="section-note">Currency already banked. Just needs spending on max day.</p>
 
     <div class="card">
       <div class="card-head" style="cursor:default">
@@ -416,12 +466,23 @@
           </div>
           <div class="card-meta">
             <div class="progress-mini"><div class="progress-mini-fill" style="width:100%"></div></div>
-            <span class="frac">1.050 / 1.050 vouchers</span>
+            <span class="frac">1,050 / 1,050 vouchers</span>
           </div>
         </div>
       </div>
       <div class="card-body" style="padding-left:14px">
-        <span class="tag banked">banked</span> Converte log 2/9 &rarr; 9/9. Gasto no dia do max: Pirate's hook (800) + recolor graceful (250).
+        <div class="log-grid">
+          <span class="log-item pending" title="Agility arena ticket"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Agility_arena_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Pirate's hook"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pirate's_hook.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful hood"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_hood.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful cape"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_cape.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful top"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_top.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful legs"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_legs.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful gloves"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_gloves.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_boots.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Brimhaven voucher"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Brimhaven_voucher.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <span class="tag banked">banked</span> Converts log 2/9 &rarr; 9/9. Spend on max day: Pirate's hook (800) + graceful recolor (250). Shown as pending here since holding the currency doesn't log the items themselves &mdash; only the actual purchase does.
       </div>
     </div>
 
@@ -435,19 +496,29 @@
           </div>
           <div class="card-meta">
             <div class="progress-mini"><div class="progress-mini-fill" style="width:100%"></div></div>
-            <span class="frac">1.591 / 1.590 termites</span>
+            <span class="frac">1,591 / 1,590 termites</span>
           </div>
         </div>
       </div>
       <div class="card-body" style="padding-left:14px">
-        <span class="tag banked">banked</span> Converte log 0/8 &rarr; 8/8. Gasto no dia do max: teleport scroll (40) + Graceful crafting kit (650) + calcified acorn (900). Não precisa de giant squirrel.
+        <div class="log-grid">
+          <span class="log-item pending" title="Colossal wyrm teleport scroll"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Colossal_wyrm_teleport_scroll.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Calcified acorn"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Calcified_acorn.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful hood"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_hood.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful cape"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_cape.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful top"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_top.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful legs"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_legs.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful gloves"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_gloves.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Graceful boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Graceful_boots.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <span class="tag banked">banked</span> Converts log 0/8 &rarr; 8/8. Spend on max day: teleport scroll (40) + Graceful crafting kit (650) + calcified acorn (900). No giant squirrel needed.
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Fila de prioridade <span class="count">8 sistemas, por horas</span></h2>
-    <p class="section-note">Ordenado do mais rápido pro mais lento. Toque num item pra ver os detalhes.</p>
+    <h2>Priority queue <span class="count">8 systems, by hours</span></h2>
+    <p class="section-note">Ordered fastest to slowest. Tap an item for details &mdash; obtained pieces show sharp, missing ones show faded.</p>
 
     <details class="card">
       <summary class="card-head">
@@ -465,8 +536,14 @@
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag shop">loja</span><strong>Decidido:</strong> Fletching 92&rarr;99 vai ser treinado nos totems de redwood &mdash; as 80.000 offerings (800 research points) saem de graça no caminho.</p>
-        <p>Faltam: Bow string spool, Fletching knife, Ent branch, Greenman mask. Fecha o log comprando e revendendo em ordem decrescente (mask&rarr;knife&rarr;spool&rarr;branch).</p>
+        <div class="log-grid">
+          <span class="log-item pending" title="Bow string spool"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Bow_string_spool.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Fletching knife"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Fletching_knife.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Ent branch"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Ent_branch.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Greenman mask"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Greenman_mask.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag shop">shop</span><strong>Decided:</strong> Fletching 92&rarr;99 will be trained on redwood totems &mdash; the 80,000 offerings (800 research points) come free along the way.</p>
+        <p>Missing: Bow string spool, Fletching knife, Ent branch, Greenman mask. Closes the log by buying and selling back in descending order (mask&rarr;knife&rarr;spool&rarr;branch).</p>
       </div>
     </details>
 
@@ -476,7 +553,7 @@
         <div class="card-main">
           <div class="card-title-row">
             <span class="card-name">Shades of Mort'ton</span>
-            <span class="hours">~3,5&ndash;10h</span>
+            <span class="hours">~3.5&ndash;10h</span>
           </div>
           <div class="card-meta">
             <div class="progress-mini"><div class="progress-mini-fill" style="width:21%"></div></div>
@@ -486,8 +563,24 @@
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag rng">RNG</span> Já tem: <strong>Amulet of the Damned, Flamtaer bag, Fine cloth</strong> &mdash; os itens mais incertos já caíram.</p>
-        <p>Faltam: 5 locks (bronze&rarr;gold, rápidos), 4 peças de Zealot (só Gold Chest, 1/128 cada rolagem), Tree wizards' journal e Bloody notes (1x cada). Gargalo real são as 4 peças de Zealot.</p>
+        <div class="log-grid">
+          <span class="log-item obtained" title="Amulet of the Damned"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Amulet_of_the_damned.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item obtained" title="Flamtaer bag"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Flamtaer_bag.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item obtained" title="Fine cloth"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Fine_cloth.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Bronze locks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Bronze_locks.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Steel locks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Steel_locks.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Black locks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Black_locks.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Silver locks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Silver_locks.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold locks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Gold_locks.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Zealot's helm"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Zealot's_helm.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Zealot's robe top"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Zealot's_robe_top.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Zealot's robe bottom"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Zealot's_robe_bottom.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Zealot's boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Zealot's_boots.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tree wizards' journal"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Tree_wizards'_journal.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Bloody notes"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Bloody_notes.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag rng">RNG</span> Already have: <strong>Amulet of the Damned, Flamtaer bag, Fine cloth</strong> &mdash; the most uncertain items already dropped.</p>
+        <p>Missing: 5 locks (bronze&rarr;gold, fast), 4 Zealot pieces (Gold Chest only, 1/128 per roll), Tree wizards' journal and Bloody notes (1x each). The real bottleneck is the 4 Zealot pieces.</p>
       </div>
     </details>
 
@@ -497,7 +590,7 @@
         <div class="card-main">
           <div class="card-title-row">
             <span class="card-name">Tithe Farm</span>
-            <span class="hours">~7,4&ndash;10h</span>
+            <span class="hours">~7.4&ndash;10h</span>
           </div>
           <div class="card-meta">
             <div class="progress-mini"><div class="progress-mini-fill" style="width:29%"></div></div>
@@ -507,8 +600,17 @@
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag shop">loja</span> Já tem: <strong>Farmer's strawhat, Herb sack.</strong> Zero RNG, 100% loja do Farmer Gricoller.</p>
-        <p>Faltam: Farmer's jacket (150), Farmer's boro trousers (125), Farmer's boots (50), Seed box (250), Gricoller's can (200) &mdash; 775 Tithe points no total, 0 banked hoje.</p>
+        <div class="log-grid">
+          <span class="log-item obtained" title="Farmer's strawhat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Farmer's_strawhat.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item obtained" title="Herb sack"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Herb_sack.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Farmer's jacket"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Farmer's_jacket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Farmer's boro trousers"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Farmer's_boro_trousers.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Farmer's boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Farmer's_boots.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Seed box"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Seed_box.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gricoller's can"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Gricoller's_can.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag shop">shop</span> Already have: <strong>Farmer's strawhat, Herb sack.</strong> Zero RNG, 100% Farmer Gricoller's shop.</p>
+        <p>Missing: Farmer's jacket (150), Farmer's boro trousers (125), Farmer's boots (50), Seed box (250), Gricoller's can (200) &mdash; 775 Tithe points total, 0 banked today.</p>
       </div>
     </details>
 
@@ -528,8 +630,52 @@
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag shop">loja</span> 21 tickets guardados, mas <strong>0 itens comprados ainda</strong> &mdash; guardar ticket não conta no log. Corte decidido: 100 tickets de pico &rarr; 31 slots.</p>
-        <p>Faltam 79 tickets a ~6/h. Testar primeiro: Decorative helm por 4 tickets, comprar e revender, conferir se loga.</p>
+        <p class="log-legend"><em>39 log items, all shop-bought &mdash; icons below are representative (exact per-item names aren't all confirmed yet), all pending since none has been purchased.</em></p>
+        <div class="log-grid">
+          <!-- 8 red pieces + 4 hoods/cloaks -->
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Red decorative piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Hood or cloak"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Hood or cloak"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Hood or cloak"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Hood or cloak"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Magic hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Magic set piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Magic set piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Magic set piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Ranged set piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Ranged set piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Ranged set piece"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White helm / full helm / boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White helm / full helm / boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White helm / full helm / boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White sword"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White legs"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White skirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White shield"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Halo"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Halo"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Halo"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="White platebody"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Banner"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Banner (cutoff: 100 tickets, 31 slots)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold helm (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold boots (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold full helm (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold sword (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold legs (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold skirt (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold shield (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gold platebody (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Castle_wars_ticket.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag shop">shop</span> 21 tickets banked, but <strong>0 items purchased yet</strong> &mdash; holding a ticket doesn't log anything. Decided cutoff: 100-ticket peak &rarr; 31 slots.</p>
+        <p>79 tickets left at ~6/h. Test first: Decorative helm for 4 tickets, buy and sell back, check whether it logs.</p>
       </div>
     </details>
 
@@ -539,7 +685,7 @@
         <div class="card-main">
           <div class="card-title-row">
             <span class="card-name">Magic Training Arena</span>
-            <span class="hours">~24,8h</span>
+            <span class="hours">~24.8h</span>
           </div>
           <div class="card-meta">
             <div class="progress-mini"><div class="progress-mini-fill" style="width:18%"></div></div>
@@ -549,8 +695,21 @@
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag shop">loja</span> Já tem: <strong>Infinity boots, Bones to peaches.</strong> Zero RNG, 4 salas com moeda própria (Pizazz points).</p>
-        <p>Faltam: os 4 wands, Infinity hat/top/bottoms/gloves, Mage's book. Sem desvantagem de Ironman, tudo ganho jogando.</p>
+        <div class="log-grid">
+          <span class="log-item obtained" title="Infinity boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Infinity_boots.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item obtained" title="Bones to Peaches"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Bones_to_peaches.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Beginner wand"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Beginner_wand.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Apprentice wand"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Apprentice_wand.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Teacher wand"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Teacher_wand.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Master wand"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Master_wand.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Infinity hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Infinity_hat.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Infinity top"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Infinity_top.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Infinity bottoms"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Infinity_bottoms.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Infinity gloves"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Infinity_gloves.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Mage's book"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Mage's_book.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag shop">shop</span> Already have: <strong>Infinity boots, Bones to Peaches.</strong> Zero RNG, 4 rooms with their own currency (Pizazz points).</p>
+        <p>Missing: the 4 wands, Infinity hat/top/bottoms/gloves, Mage's book. No Ironman disadvantage, everything earned by playing.</p>
       </div>
     </details>
 
@@ -564,14 +723,27 @@
           </div>
           <div class="card-meta">
             <div class="progress-mini"><div class="progress-mini-fill" style="width:30%"></div></div>
-            <span class="frac">log 3/11 &middot; meta 10/11</span>
+            <span class="frac">log 3/11 &middot; goal 10/11</span>
           </div>
         </div>
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag rng">RNG</span> Já tem: <strong>Fighter hat, Fighter torso, Granite body</strong> &mdash; as 3 peças mais caras/incertas já fechadas.</p>
-        <p><strong>Pet Penance Queen fora do plano</strong> (decidido) &mdash; meta é 10/11, não 11/11. Faltam 6 itens de loja determinística (~1.160 honour points, poucas horas) + Granite helm via High Gamble (RNG 1/32, gargalo real).</p>
+        <div class="log-grid">
+          <span class="log-item obtained" title="Fighter hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Fighter_hat.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item obtained" title="Fighter torso"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Fighter_torso.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item obtained" title="Granite body"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Granite_body.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Ranger hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Ranger_hat.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Runner hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Runner_hat.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Healer hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Healer_hat.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Penance skirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Penance_skirt.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Runner boots"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Runner_boots.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Penance gloves"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Penance_gloves.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Granite helm"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Granite_helm.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Pet Penance Queen (excluded from goal)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pet_penance_queen.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag rng">RNG</span> Already have: <strong>Fighter hat, Fighter torso, Granite body</strong> &mdash; the 3 most expensive/uncertain pieces already closed.</p>
+        <p><strong>Pet Penance Queen out of the plan</strong> (decided) &mdash; goal is 10/11, not 11/11. Missing 6 deterministic-shop items (~1,160 honour points, a few hours) + Granite helm via High Gamble (RNG 1/32, the real bottleneck).</p>
       </div>
     </details>
 
@@ -591,8 +763,41 @@
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag shop">loja</span> Corte decidido: até "Gilded smile" &rarr; 21.590 pieces of eight, sem revenda, 26 slots.</p>
-        <p>Ritmo ~700 pieces/h com ~17 rum do time. 0 banked hoje. Calibrar taxa real com 3 partidas antes de confiar na estimativa.</p>
+        <p class="log-legend"><em>30 log items &mdash; the 7 hats/shirts/slacks below stand in for their color variants (exact names unconfirmed), all pending.</em></p>
+        <div class="log-grid">
+          <span class="log-item pending" title="Red rum"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Red_rum.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Blue rum"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Blue_rum.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="The stuff"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/The_stuff.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tricorn hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tricorn hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tricorn hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tricorn hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tricorn hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tricorn hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Tricorn hat"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Naval shirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Naval shirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Naval shirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Naval shirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Naval shirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Naval shirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Naval shirt"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Navy slacks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Navy slacks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Navy slacks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Navy slacks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Navy slacks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Navy slacks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Navy slacks"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Pieces_of_eight.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Cutthroat flag"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Cutthroat_flag.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gilded smile flag"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Gilded_smile_flag.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Bronze fist flag (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Bronze_fist_flag.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Lucky shot flag (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Lucky_shot_flag.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Treasure flag (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Treasure_flag.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Phasmatys flag (reserve)"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Phasmatys_flag.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag shop">shop</span> Decided cutoff: up to "Gilded smile" &rarr; 21,590 pieces of eight, no sell-back, 26 slots.</p>
+        <p>Rate ~700 pieces/h with ~17 team rum. 0 banked today. Calibrate the real rate with 3 games before trusting the estimate.</p>
       </div>
     </details>
 
@@ -602,7 +807,7 @@
         <div class="card-main">
           <div class="card-title-row">
             <span class="card-name">Gnome Restaurant</span>
-            <span class="hours">não calculado</span>
+            <span class="hours">not calculated</span>
           </div>
           <div class="card-meta">
             <div class="progress-mini"><div class="progress-mini-fill" style="width:0%"></div></div>
@@ -612,41 +817,47 @@
         <span class="chev">&#9656;</span>
       </summary>
       <div class="card-body">
-        <p><span class="tag rng">RNG</span> Sem moeda &mdash; tips aleatórias em hard deliveries de 6 clientes específicos (Gnome scarf/goggles 1/17, Grand seed pod 1/22, Mint cake taxa desconhecida).</p>
-        <p>Pendente: confirmar se já fez as quests Grand Tree e Fishing Contest (libera o melhor alvo de entrega, Captain Ninto).</p>
+        <div class="log-grid">
+          <span class="log-item pending" title="Grand seed pod"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Grand_seed_pod.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gnome scarf"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Gnome_scarf.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Gnome goggles"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Gnome_goggles.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="log-item pending" title="Mint cake"><img src="https://oldschool.runescape.wiki/w/Special:FilePath/Mint_cake.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        </div>
+        <p><span class="tag rng">RNG</span> No currency &mdash; random tips on hard deliveries to 6 specific customers (Gnome scarf/goggles 1/17, Grand seed pod 1/22, Mint cake rate unknown).</p>
+        <p>Pending: confirm whether the Grand Tree and Fishing Contest quests are done (unlocks the best delivery target, Captain Ninto).</p>
       </div>
     </details>
   </section>
 
   <section>
-    <h2>Checklist do dia do max</h2>
+    <h2>Max day checklist</h2>
     <div class="checklist">
       <ol>
-        <li>Ter em mãos: 2 sets de graceful sem cor, &ge;100 tickets de Castle Wars, &ge;21.590 pieces de Trouble Brewing, &ge;80.000 Vale offerings.</li>
-        <li><strong>Castle Wars</strong> &mdash; comprar e revender até fechar os 31 slots (pico 100 tickets).</li>
+        <li>Have in hand: 2 uncolored graceful sets, &ge;100 Castle Wars tickets, &ge;21,590 Trouble Brewing pieces, &ge;80,000 Vale offerings.</li>
+        <li><strong>Castle Wars</strong> &mdash; buy and sell back until the 31 slots close (100-ticket peak).</li>
         <li><strong>Brimhaven</strong> &mdash; hook (800) + recolor (250) &rarr; log 9/9.</li>
         <li><strong>Colossal Wyrm</strong> &mdash; teleport scroll (40) + calcified acorn (900) + Graceful crafting kit (650) &rarr; log 8/8.</li>
-        <li><strong>Trouble Brewing</strong> &mdash; comprar em ordem até Gilded smile (21.590 pieces).</li>
-        <li><strong>Vale Totems</strong> &mdash; hasty-rummage, depois mask&rarr;knife&rarr;spool&rarr;branch em ordem decrescente &rarr; log 4/4.</li>
-        <li>Somar tudo e comparar com a projeção: 872 slots.</li>
+        <li><strong>Trouble Brewing</strong> &mdash; buy in price order up to Gilded smile (21,590 pieces).</li>
+        <li><strong>Vale Totems</strong> &mdash; hasty-rummage, then mask&rarr;knife&rarr;spool&rarr;branch in descending order &rarr; log 4/4.</li>
+        <li>Add it all up and compare against the projection: 872 slots.</li>
       </ol>
     </div>
   </section>
 
   <section>
-    <h2>Fora do plano</h2>
+    <h2>Out of the plan</h2>
     <div class="discard-list">
-      <div class="discard-item"><span class="name">Volcanic Mine</span><span class="why">4/8 &middot; não vai fazer</span></div>
-      <div class="discard-item"><span class="name">Mastering Mixology</span><span class="why">2/7 &middot; descartado</span></div>
-      <div class="discard-item"><span class="name">Last Man Standing</span><span class="why">4/32 &middot; descartado</span></div>
-      <div class="discard-item"><span class="name">Hallowed Sepulchre</span><span class="why">13/16 &middot; descartado</span></div>
-      <div class="discard-item"><span class="name">Soul Wars</span><span class="why">0/3 &middot; descartado</span></div>
-      <div class="discard-item"><span class="name">Pet Penance Queen</span><span class="why">dentro de Barbarian Assault &middot; fora da meta</span></div>
+      <div class="discard-item"><span class="name">Volcanic Mine</span><span class="why">4/8 &middot; not doing it</span></div>
+      <div class="discard-item"><span class="name">Mastering Mixology</span><span class="why">2/7 &middot; discarded</span></div>
+      <div class="discard-item"><span class="name">Last Man Standing</span><span class="why">4/32 &middot; discarded</span></div>
+      <div class="discard-item"><span class="name">Hallowed Sepulchre</span><span class="why">13/16 &middot; discarded</span></div>
+      <div class="discard-item"><span class="name">Soul Wars</span><span class="why">0/3 &middot; discarded</span></div>
+      <div class="discard-item"><span class="name">Pet Penance Queen</span><span class="why">inside Barbarian Assault &middot; out of goal</span></div>
     </div>
   </section>
 
   <footer>
     <span>RSN: Hash Club</span>
-    <span>Dados via API TempleOSRS &middot; 20/09/2026</span>
+    <span>Data via TempleOSRS API &middot; 20 Sep 2026</span>
   </footer>
 </div>
