@@ -16,6 +16,9 @@ const CATEGORIES = [
     id: 'brimhaven_agility_arena',
     name: 'Brimhaven Agility Arena',
     group: 'Minigames',
+    banked: true,
+    hoursLow: 0,
+    hoursHigh: 0,
     note: 'Ticket/voucher log by just holding the quantity (confirmed in-game); the rest needs an actual purchase.',
     items: [
       { name: 'Agility arena ticket', obtained: true },
@@ -33,6 +36,9 @@ const CATEGORIES = [
     id: 'colossal_wyrm_agility_course',
     name: 'Colossal Wyrm Agility Course',
     group: 'Minigames',
+    banked: true,
+    hoursLow: 0,
+    hoursHigh: 0,
     items: [
       { name: 'Colossal wyrm teleport scroll', obtained: false },
       { name: 'Calcified acorn', obtained: false },
@@ -48,6 +54,8 @@ const CATEGORIES = [
     id: 'vale_totems',
     name: 'Vale Totems',
     group: 'Minigames',
+    hoursLow: 0,
+    hoursHigh: 0,
     items: [
       { name: 'Bow string spool', obtained: false },
       { name: 'Fletching knife', obtained: false },
@@ -59,6 +67,8 @@ const CATEGORIES = [
     id: 'magic_training_arena',
     name: 'Magic Training Arena',
     group: 'Minigames',
+    hoursLow: 24.8,
+    hoursHigh: 24.8,
     items: [
       { name: 'Infinity boots', obtained: true },
       { name: 'Bones to Peaches', obtained: true },
@@ -77,6 +87,8 @@ const CATEGORIES = [
     id: 'barbarian_assault',
     name: 'Barbarian Assault',
     group: 'Minigames',
+    hoursLow: 18,
+    hoursHigh: 33,
     items: [
       { name: 'Fighter hat', obtained: true },
       { name: 'Fighter torso', obtained: true },
@@ -95,6 +107,8 @@ const CATEGORIES = [
     id: 'tithe_farm',
     name: 'Tithe Farm',
     group: 'Minigames',
+    hoursLow: 7.4,
+    hoursHigh: 10.2,
     items: [
       { name: "Farmer's strawhat", obtained: true },
       { name: 'Herb sack', obtained: true },
@@ -120,6 +134,8 @@ const CATEGORIES = [
     id: 'shades_of_mortton',
     name: "Shades of Mort'ton",
     group: 'Minigames',
+    hoursLow: 3.5,
+    hoursHigh: 10,
     items: [
       { name: 'Amulet of the Damned', obtained: true },
       { name: 'Flamtaer bag', obtained: true },
@@ -141,6 +157,8 @@ const CATEGORIES = [
     id: 'castle_wars',
     name: 'Castle Wars',
     group: 'Minigames',
+    hoursLow: 13,
+    hoursHigh: 13,
     note: '39 log items, mostly named only by tier in BANCO.md — icons below are grouped/representative, not individually confirmed.',
     items: [
       { name: 'Red decorative piece', obtained: false, icon: 'Castle_wars_ticket' },
@@ -188,6 +206,8 @@ const CATEGORIES = [
     id: 'trouble_brewing',
     name: 'Trouble Brewing',
     group: 'Minigames',
+    hoursLow: 31,
+    hoursHigh: 31,
     note: '30 log items — the hat/shirt/slacks color variants stand in for unconfirmed exact names.',
     items: [
       { name: 'Red rum', obtained: false },
@@ -226,6 +246,8 @@ const CATEGORIES = [
     id: 'fishing_trawler',
     name: 'Fishing Trawler',
     group: 'Minigames',
+    hoursLow: 0,
+    hoursHigh: 0,
     note: 'Complete.',
     items: [
       { name: 'Angler hat', obtained: true },
@@ -262,6 +284,8 @@ const CATEGORIES = [
     id: 'giants_foundry',
     name: "Giants' Foundry",
     group: 'Minigames',
+    hoursLow: 0,
+    hoursHigh: 0,
     note: 'Complete.',
     items: [
       { name: 'Double ammo mould', obtained: true },
@@ -279,6 +303,8 @@ const CATEGORIES = [
     id: 'guardians_of_the_rift',
     name: 'Guardians of the Rift',
     group: 'Minigames',
+    hoursLow: 0,
+    hoursHigh: 0,
     note: 'Complete.',
     items: [
       { name: 'Abyssal protector', obtained: true },
@@ -334,6 +360,8 @@ const CATEGORIES = [
     id: 'barracuda_trials',
     name: 'Barracuda Trials',
     group: 'Other',
+    hoursLow: 0,
+    hoursHigh: 0,
     note: '8/9 confirmed — the other 8 obtained items aren’t individually named in BANCO.md.',
     items: [
       { name: "Gurtob's fabric roll", obtained: false },
@@ -450,6 +478,97 @@ function isSelected(goals, catId, item) {
   return !item.defaultExcluded;
 }
 
+// "Secured" is a third state you set from the Ledger itself, separate from
+// picking goals in the Log Browser: a selected-but-not-yet-obtained item
+// starts pending (gray), and you can flag it secured (e.g. the currency to
+// buy it is already banked) — that moves it into the bar's "banked" segment
+// instead of the outer "still to farm" segment.
+const SECURED_KEY = 'osrs-clog-secured-v1';
+
+function loadSecured() {
+  try {
+    const raw = localStorage.getItem(SECURED_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+
+function saveSecured(secured) {
+  try { localStorage.setItem(SECURED_KEY, JSON.stringify(secured)); } catch (e) { /* ignore */ }
+}
+
+function isSecured(secured, catId, itemName) {
+  return !!(secured[catId] && secured[catId][itemName]);
+}
+
+function setSecured(catId, itemName, value) {
+  const secured = loadSecured();
+  secured[catId] = secured[catId] || {};
+  if (value) secured[catId][itemName] = true;
+  else delete secured[catId][itemName];
+  saveSecured(secured);
+  return secured;
+}
+
+// Effective 3-state status for a selected item: real "obtained" data always
+// wins, then the user's own "secured" flag, then plain "pending"/"unknown".
+function effectiveStatus(item, secured, catId) {
+  if (item.obtained === true) return 'obtained';
+  if (isSecured(secured, catId, item.name)) return 'secured';
+  return statusClass(item.obtained); // 'pending' or 'unknown'
+}
+
+// Totals for the Ledger's header stat row + segmented bar, computed purely
+// from what's selected in the Log Browser and what's been marked secured.
+// today/maxGoal are the fixed real numbers (current log count, ultimate
+// target) — everything else is derived from goals + secured state.
+function computePlanStats(today, maxGoal) {
+  const goals = loadGoals();
+  const secured = loadSecured();
+
+  let securedCount = 0;
+  let pendingCount = 0;
+  let hoursLow = 0;
+  let hoursHigh = 0;
+  let hasUnknownHours = false;
+
+  CATEGORIES.forEach(cat => {
+    let catNeedsHours = false;
+    cat.items.forEach(item => {
+      if (!isSelected(goals, cat.id, item)) return;
+      if (item.obtained === true) return; // already real, not part of the plan math
+      if (isSecured(secured, cat.id, item.name)) {
+        securedCount++;
+      } else {
+        pendingCount++;
+        catNeedsHours = true;
+      }
+    });
+    if (catNeedsHours) {
+      if (typeof cat.hoursLow === 'number' && typeof cat.hoursHigh === 'number') {
+        hoursLow += cat.hoursLow;
+        hoursHigh += cat.hoursHigh;
+      } else {
+        hasUnknownHours = true;
+      }
+    }
+  });
+
+  const bankedTotal = today + securedCount;
+  const planTotal = bankedTotal + pendingCount;
+
+  return {
+    today,
+    maxGoal,
+    securedCount,
+    pendingCount,
+    bankedTotal,
+    planTotal,
+    hoursLow,
+    hoursHigh,
+    hasUnknownHours,
+  };
+}
+
 function statusClass(obtained) {
   if (obtained === true) return 'obtained';
   if (obtained === false) return 'pending';
@@ -462,15 +581,25 @@ function statusLabel(obtained) {
   return 'unconfirmed';
 }
 
-// Renders the "My Goals" section (same accordion look as the category browser,
-// read-only) into the two given element ids. Used by both log-browser.html and
-// dashboard.html so a goal saved on one page shows up identically on the other.
+function effectiveStatusLabel(cls) {
+  if (cls === 'obtained') return 'obtained';
+  if (cls === 'secured') return 'secured — click to unmark';
+  if (cls === 'unknown') return 'unconfirmed';
+  return 'pending — click to mark secured';
+}
+
+// Renders the "My Goals" section (same accordion look as the category browser)
+// into the two given element ids. Used by both log-browser.html and
+// dashboard.html so a goal saved on one page shows up identically on the
+// other. Tiles are interactive here (unlike the read-only status elsewhere):
+// clicking a non-obtained item toggles it between pending and secured.
 function renderMyGoalsInto(listId, summaryId) {
   const list = document.getElementById(listId);
   const summary = document.getElementById(summaryId);
   if (!list) return;
 
   const goals = loadGoals();
+  const secured = loadSecured();
   const byCat = CATEGORIES.map(cat => ({
     cat,
     items: cat.items.filter(item => isSelected(goals, cat.id, item)),
@@ -484,16 +613,19 @@ function renderMyGoalsInto(listId, summaryId) {
     return;
   }
 
-  const obtainedCount = byCat.reduce((n, g) => n + g.items.filter(i => i.obtained === true).length, 0);
-  if (summary) {
-    summary.textContent = `${total} items targeted · ${obtainedCount} already obtained · ${total - obtainedCount} still needed`;
-  }
+  let obtainedTotal = 0, securedTotal = 0, pendingTotal = 0;
 
-  list.innerHTML = byCat.map(({ cat, items }) => {
+  const catsHtml = byCat.map(({ cat, items }) => {
     const obtained = items.filter(i => i.obtained === true).length;
     const tiles = items.map(item => {
-      const cls = statusClass(item.obtained);
-      return `<span class="log-item ${cls}" title="${escapeAttr(item.name)} — ${statusLabel(item.obtained)}"><img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'"></span>`;
+      const cls = effectiveStatus(item, secured, cat.id);
+      if (cls === 'obtained') obtainedTotal++;
+      else if (cls === 'secured') securedTotal++;
+      else pendingTotal++;
+
+      const clickable = cls !== 'obtained';
+      const attrs = clickable ? `data-toggle-cat="${cat.id}" data-toggle-item="${escapeAttr(item.name)}"` : '';
+      return `<span class="log-item ${cls}" ${attrs} title="${escapeAttr(item.name)} — ${effectiveStatusLabel(cls)}"><img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'"></span>`;
     }).join('');
     return `
       <details class="log-cat" open>
@@ -508,4 +640,28 @@ function renderMyGoalsInto(listId, summaryId) {
       </details>
     `;
   }).join('');
+
+  if (summary) {
+    summary.textContent = `${total} items targeted · ${obtainedTotal} obtained · ${securedTotal} secured · ${pendingTotal} pending (click a tile to mark/unmark secured)`;
+  }
+  list.innerHTML = catsHtml;
 }
+
+// One shared click handler for every page that includes this file: toggles
+// secured state on any clickable My Goals tile, re-renders that section, and
+// pings window.onGoalsChanged (if the page defined one) so it can refresh
+// anything else that depends on the plan totals — e.g. the Ledger's header.
+document.addEventListener('click', (e) => {
+  const tile = e.target.closest('[data-toggle-cat]');
+  if (!tile) return;
+  const catId = tile.dataset.toggleCat;
+  const itemName = tile.dataset.toggleItem;
+  const secured = loadSecured();
+  const nowSecured = !isSecured(secured, catId, itemName);
+  setSecured(catId, itemName, nowSecured);
+
+  ['myGoalsList'].forEach(listId => {
+    if (document.getElementById(listId)) renderMyGoalsInto(listId, 'myGoalsSummary');
+  });
+  if (typeof window.onGoalsChanged === 'function') window.onGoalsChanged();
+});

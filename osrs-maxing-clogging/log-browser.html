@@ -196,6 +196,14 @@
     box-shadow: 0 0 0 1px var(--teal) inset;
     background: var(--teal-bg);
   }
+  .log-item.secured {
+    opacity: 1;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 1px var(--orange) inset;
+    background: rgba(221,142,38,0.15);
+  }
+  .log-item[data-toggle-cat] { cursor: pointer; }
+  .log-item[data-toggle-cat]:hover { filter: brightness(1.2); }
 
   /* Selectable tiles in the category browser: the checkbox covers the whole
      tile (invisible but clickable/tappable), and an excluded item just
