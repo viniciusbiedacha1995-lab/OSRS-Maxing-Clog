@@ -489,11 +489,11 @@ const CATEGORIES = [
     note: '[API 22/09] 0/6 confirmed in-game — the base Monkey transform itself isn\'t a log entry, only the 6 colored variants are. Sequential Ape Atoll Agility Course unlock, each transform is later than the last.',
     items: [
       { name: 'Karamjan monkey', obtained: false, icon: 'Karamjan monkey (item)' },
-      { name: 'Zombie monkey', obtained: false, icon: 'Zombie monkey (item)' },
-      { name: 'Maniacal monkey', obtained: false, icon: 'Maniacal monkey (item)' },
-      { name: 'Skeleton monkey', obtained: false, icon: 'Skeleton monkey (item)' },
       { name: 'Kruk jr', obtained: false },
+      { name: 'Maniacal monkey', obtained: false, icon: 'Maniacal monkey (item)' },
       { name: 'Princely monkey', obtained: false },
+      { name: 'Skeleton monkey', obtained: false, icon: 'Skeleton monkey (item)' },
+      { name: 'Zombie monkey', obtained: false, icon: 'Zombie monkey (item)' },
     ],
   },
   {
