@@ -100,6 +100,47 @@ main {
   padding: 24px 28px 60px;
 }
 
+.sync-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, var(--panel-alt), var(--panel));
+  border: 1px solid var(--border);
+  border-top-color: var(--border-bright);
+  border-radius: var(--radius);
+}
+
+.sync-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+#rsnInput {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  min-width: 180px;
+}
+
+#rsnInput:focus { outline: 1px solid var(--gold-dim); }
+
+.sync-status {
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+.sync-status.pending { color: var(--gold); }
+.sync-status.ok { color: var(--green); }
+.sync-status.warn { color: var(--gold-dim); }
+.sync-status.err { color: var(--red); }
+
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -184,6 +225,7 @@ main {
 }
 
 .skill-icon { font-size: 18px; }
+.skill-icon-img { width: 20px; height: 20px; object-fit: contain; flex-shrink: 0; }
 
 .skill-name {
   font-weight: 600;

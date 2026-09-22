@@ -4,30 +4,37 @@ const STORAGE_KEY = 'osrs-ironman-tracker-v1';
 const MAX_LEVEL = 99;
 
 const SKILLS = [
-  { id: 'attack', name: 'Attack', icon: '⚔️', category: 'combat' },
-  { id: 'strength', name: 'Strength', icon: '💪', category: 'combat' },
-  { id: 'defence', name: 'Defence', icon: '🛡️', category: 'combat' },
-  { id: 'ranged', name: 'Ranged', icon: '🏹', category: 'combat' },
-  { id: 'prayer', name: 'Prayer', icon: '🙏', category: 'combat' },
-  { id: 'magic', name: 'Magic', icon: '✨', category: 'combat' },
-  { id: 'hitpoints', name: 'Hitpoints', icon: '❤️', category: 'combat', startLevel: 10 },
-  { id: 'slayer', name: 'Slayer', icon: '💀', category: 'combat' },
-  { id: 'mining', name: 'Mining', icon: '⛏️', category: 'gathering' },
-  { id: 'fishing', name: 'Fishing', icon: '🎣', category: 'gathering' },
-  { id: 'woodcutting', name: 'Woodcutting', icon: '🪓', category: 'gathering' },
-  { id: 'farming', name: 'Farming', icon: '🌾', category: 'gathering' },
-  { id: 'hunter', name: 'Hunter', icon: '🐾', category: 'gathering' },
-  { id: 'smithing', name: 'Smithing', icon: '🔨', category: 'artisan' },
-  { id: 'crafting', name: 'Crafting', icon: '🧵', category: 'artisan' },
-  { id: 'fletching', name: 'Fletching', icon: '🎯', category: 'artisan' },
-  { id: 'herblore', name: 'Herblore', icon: '🧪', category: 'artisan' },
-  { id: 'cooking', name: 'Cooking', icon: '🍳', category: 'artisan' },
-  { id: 'firemaking', name: 'Firemaking', icon: '🔥', category: 'artisan' },
-  { id: 'runecraft', name: 'Runecraft', icon: '🔮', category: 'artisan' },
-  { id: 'construction', name: 'Construction', icon: '🏠', category: 'artisan' },
-  { id: 'agility', name: 'Agility', icon: '🏃', category: 'support' },
-  { id: 'thieving', name: 'Thieving', icon: '🕵️', category: 'support' },
+  { id: 'attack', name: 'Attack', icon: '⚔️', wikiFile: 'Attack_icon.png', category: 'combat' },
+  { id: 'strength', name: 'Strength', icon: '💪', wikiFile: 'Strength_icon.png', category: 'combat' },
+  { id: 'defence', name: 'Defence', icon: '🛡️', wikiFile: 'Defence_icon.png', category: 'combat' },
+  { id: 'ranged', name: 'Ranged', icon: '🏹', wikiFile: 'Ranged_icon.png', category: 'combat' },
+  { id: 'prayer', name: 'Prayer', icon: '🙏', wikiFile: 'Prayer_icon.png', category: 'combat' },
+  { id: 'magic', name: 'Magic', icon: '✨', wikiFile: 'Magic_icon.png', category: 'combat' },
+  { id: 'hitpoints', name: 'Hitpoints', icon: '❤️', wikiFile: 'Hitpoints_icon.png', category: 'combat', startLevel: 10 },
+  { id: 'slayer', name: 'Slayer', icon: '💀', wikiFile: 'Slayer_icon.png', category: 'combat' },
+  { id: 'mining', name: 'Mining', icon: '⛏️', wikiFile: 'Mining_icon.png', category: 'gathering' },
+  { id: 'fishing', name: 'Fishing', icon: '🎣', wikiFile: 'Fishing_icon.png', category: 'gathering' },
+  { id: 'woodcutting', name: 'Woodcutting', icon: '🪓', wikiFile: 'Woodcutting_icon.png', category: 'gathering' },
+  { id: 'farming', name: 'Farming', icon: '🌾', wikiFile: 'Farming_icon.png', category: 'gathering' },
+  { id: 'hunter', name: 'Hunter', icon: '🐾', wikiFile: 'Hunter_icon.png', category: 'gathering' },
+  { id: 'smithing', name: 'Smithing', icon: '🔨', wikiFile: 'Smithing_icon.png', category: 'artisan' },
+  { id: 'crafting', name: 'Crafting', icon: '🧵', wikiFile: 'Crafting_icon.png', category: 'artisan' },
+  { id: 'fletching', name: 'Fletching', icon: '🎯', wikiFile: 'Fletching_icon.png', category: 'artisan' },
+  { id: 'herblore', name: 'Herblore', icon: '🧪', wikiFile: 'Herblore_icon.png', category: 'artisan' },
+  { id: 'cooking', name: 'Cooking', icon: '🍳', wikiFile: 'Cooking_icon.png', category: 'artisan' },
+  { id: 'firemaking', name: 'Firemaking', icon: '🔥', wikiFile: 'Firemaking_icon.png', category: 'artisan' },
+  { id: 'runecraft', name: 'Runecraft', icon: '🔮', wikiFile: 'Runecraft_icon.png', category: 'artisan' },
+  { id: 'construction', name: 'Construction', icon: '🏠', wikiFile: 'Construction_icon.png', category: 'artisan' },
+  { id: 'agility', name: 'Agility', icon: '🏃', wikiFile: 'Agility_icon.png', category: 'support' },
+  { id: 'thieving', name: 'Thieving', icon: '🕵️', wikiFile: 'Thieving_icon.png', category: 'support' },
 ];
+
+function skillIconHtml(s) {
+  // Special:FilePath is the stable hotlink redirect MediaWiki wikis expose,
+  // so this doesn't need to know the hashed /images/x/xy/ directory the file actually lives in.
+  const src = `https://oldschool.runescape.wiki/w/Special:FilePath/${s.wikiFile}`;
+  return `<img class="skill-icon-img" src="${src}" alt="${s.name}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'skill-icon',textContent:'${s.icon}'}))">`;
+}
 
 // --- OSRS XP <-> level math ---
 const XP_TABLE = (() => {
@@ -128,12 +135,12 @@ function renderSkills() {
     return `
       <div class="skill-card ${isMaxed ? 'maxed' : ''}" data-skill="${s.id}">
         <div class="skill-card-head">
-          <span class="skill-icon">${s.icon}</span>
+          ${skillIconHtml(s)}
           <span class="skill-name">${s.name}</span>
           ${isMaxed ? '<span class="skill-badge">99</span>' : ''}
         </div>
         <div class="skill-inputs">
-          <label>Nível
+          <label>Level
             <input type="number" class="level-input" min="1" max="99" value="${data.level}" data-skill="${s.id}">
           </label>
           <label>XP
@@ -188,7 +195,7 @@ function renderGoals() {
   goalsList.innerHTML = enriched.map(g => `
     <li class="goal-item ${g.done ? 'done' : ''}">
       <div class="goal-info">
-        <div class="goal-title">${g.skill.icon} ${g.skill.name} → nível ${g.targetLevel}</div>
+        <div class="goal-title">${g.skill.icon} ${g.skill.name} → level ${g.targetLevel}</div>
         <div class="goal-sub">${g.done ? 'Concluído!' : `${fmt(g.remaining)} xp restante`}</div>
       </div>
       <button class="goal-remove" data-id="${g.id}" title="Remover meta">✕</button>
@@ -269,6 +276,86 @@ goalsList.addEventListener('click', (e) => {
   renderGoals();
 });
 
+// --- Hiscores sync (TempleOSRS public API) ---
+const RSN_KEY = 'osrs-ironman-tracker-rsn';
+const rsnInput = document.getElementById('rsnInput');
+const syncBtn = document.getElementById('syncBtn');
+const syncStatus = document.getElementById('syncStatus');
+
+function loadRsn() {
+  try { return localStorage.getItem(RSN_KEY) || 'Hash Club'; } catch (e) { return 'Hash Club'; }
+}
+
+function saveRsn(name) {
+  try { localStorage.setItem(RSN_KEY, name); } catch (e) { /* ignore */ }
+}
+
+function findSkillEntry(data, skill) {
+  if (!data) return null;
+  const target = skill.id.toLowerCase();
+  const keys = Object.keys(data);
+  for (const key of keys) {
+    const norm = key.toLowerCase().replace(/[^a-z]/g, '');
+    if (norm === target || norm.startsWith(target) || target.startsWith(norm)) {
+      return data[key];
+    }
+  }
+  return null;
+}
+
+function setSyncStatus(text, kind) {
+  syncStatus.textContent = text;
+  syncStatus.className = `sync-status ${kind || ''}`;
+}
+
+async function syncFromTempleOSRS(rsn) {
+  if (!rsn) return;
+  setSyncStatus('Buscando…', 'pending');
+  try {
+    const res = await fetch(`https://templeosrs.com/api/player_stats.php?player=${encodeURIComponent(rsn)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const data = (json && (json.data || json)) || {};
+    let updated = 0;
+
+    SKILLS.forEach(s => {
+      const entry = findSkillEntry(data, s);
+      if (!entry) return;
+      const level = Number(entry.level);
+      if (!Number.isFinite(level) || level < 1) return;
+      const xpRaw = entry.experience ?? entry.xp ?? entry.exp;
+      const xpNum = Number(xpRaw);
+      const xp = Number.isFinite(xpNum) && xpNum > 0 ? xpNum : xpForLevel(level);
+      state.skills[s.id] = { level: Math.min(MAX_LEVEL, level), xp };
+      updated++;
+    });
+
+    if (updated === 0) {
+      setSyncStatus('Resposta recebida, mas nenhuma skill reconhecida. Confira o RSN ou tente de novo mais tarde.', 'warn');
+      return;
+    }
+
+    saveState();
+    renderAll();
+    setSyncStatus(`Sincronizado: ${updated}/${SKILLS.length} skills (RSN: ${rsn}).`, 'ok');
+  } catch (err) {
+    setSyncStatus(`Falha ao sincronizar (${err.message}). Pode ser CORS do navegador ou RSN incorreto — dá pra editar manualmente.`, 'err');
+  }
+}
+
+syncBtn.addEventListener('click', () => {
+  const rsn = rsnInput.value.trim();
+  if (!rsn) { setSyncStatus('Informe um RSN.', 'warn'); return; }
+  saveRsn(rsn);
+  syncFromTempleOSRS(rsn);
+});
+
+rsnInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') syncBtn.click();
+});
+
 // --- Init ---
+rsnInput.value = loadRsn();
 populateGoalSkillSelect();
 renderAll();
+syncFromTempleOSRS(rsnInput.value);
