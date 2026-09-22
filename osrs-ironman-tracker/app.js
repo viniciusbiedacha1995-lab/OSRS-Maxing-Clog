@@ -67,7 +67,7 @@ function levelForXp(xp) {
 }
 
 function fmt(n) {
-  return Math.round(n).toLocaleString('en-US');
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 // --- State ---
@@ -127,6 +127,9 @@ function renderSkills() {
     return;
   }
 
+  const focused = document.activeElement;
+  const focusedXpSkill = (focused && focused.classList.contains('xp-input')) ? focused.dataset.skill : null;
+
   skillsGrid.innerHTML = visible.map(s => {
     const data = state.skills[s.id];
     const isMaxed = data.level >= MAX_LEVEL;
@@ -136,6 +139,9 @@ function renderSkills() {
     const progressPct = isMaxed ? 100 : Math.min(100, ((data.xp - currentFloor) / span) * 100);
     const xpToNext = isMaxed ? 0 : nextFloor - data.xp;
     const xpTo99 = Math.max(0, xpForLevel(MAX_LEVEL) - data.xp);
+    // While this exact field is focused, show plain digits (easier to edit);
+    // otherwise show it formatted with thousand separators like everything else.
+    const xpDisplay = focusedXpSkill === s.id ? String(data.xp) : fmt(data.xp);
 
     return `
       <div class="skill-card ${isMaxed ? 'maxed' : ''}" data-skill="${s.id}">
@@ -149,7 +155,7 @@ function renderSkills() {
             <input type="number" class="level-input" min="1" max="99" value="${data.level}" data-skill="${s.id}">
           </label>
           <label>XP
-            <input type="number" class="xp-input" min="0" value="${data.xp}" data-skill="${s.id}">
+            <input type="text" inputmode="numeric" class="xp-input" value="${xpDisplay}" data-skill="${s.id}">
           </label>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${progressPct}%"></div></div>
@@ -251,7 +257,7 @@ skillsGrid.addEventListener('input', (e) => {
     data.level = level;
     data.xp = xpForLevel(level);
   } else if (target.classList.contains('xp-input')) {
-    let xp = parseInt(target.value, 10);
+    let xp = parseInt(target.value.replace(/\./g, ''), 10);
     if (Number.isNaN(xp)) return;
     xp = Math.max(0, xp);
     data.xp = xp;
@@ -262,6 +268,22 @@ skillsGrid.addEventListener('input', (e) => {
   renderSkills();
   renderSummary();
   renderGoals();
+});
+
+// Show plain digits while editing (formatting mid-typing fights the cursor),
+// then format with thousand separators once the field isn't focused anymore.
+skillsGrid.addEventListener('focusin', (e) => {
+  const target = e.target;
+  if (!target.classList || !target.classList.contains('xp-input')) return;
+  const data = state.skills[target.dataset.skill];
+  if (data) target.value = String(data.xp);
+});
+
+skillsGrid.addEventListener('focusout', (e) => {
+  const target = e.target;
+  if (!target.classList || !target.classList.contains('xp-input')) return;
+  const data = state.skills[target.dataset.skill];
+  if (data) target.value = fmt(data.xp);
 });
 
 document.getElementById('searchBox').addEventListener('input', (e) => {
