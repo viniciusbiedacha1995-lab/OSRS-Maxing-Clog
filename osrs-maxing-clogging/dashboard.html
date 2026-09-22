@@ -39,6 +39,31 @@
 
   .wrap { max-width: 640px; margin: 0 auto; }
 
+  .site-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 14px;
+    margin: 0 -16px;
+    background: var(--paper-raised);
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+
+  .site-nav a {
+    color: var(--ink-dim);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+  }
+
+  .site-nav a:hover {
+    color: var(--brass-strong);
+    border-color: var(--line-bright);
+    background: var(--paper-raised-2);
+  }
+
   header.top {
     position: sticky;
     top: env(safe-area-inset-top, 0px);
@@ -314,6 +339,11 @@
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<nav class="site-nav">
+  <a href="../index.html">🏠 Home</a>
+  <a href="../osrs-ironman-tracker/index.html">⚔️ Ironman Tracker</a>
+</nav>
 
 <div class="wrap">
   <header class="top">
