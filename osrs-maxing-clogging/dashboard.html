@@ -341,12 +341,24 @@
     opacity: 0.28;
     filter: grayscale(75%);
   }
+  .log-item.unknown { opacity: 0.55; border-style: dashed; border-color: var(--amber); }
   .log-item.obtained {
     opacity: 1;
     border-color: var(--teal);
     box-shadow: 0 0 0 1px var(--teal) inset;
     background: var(--teal-bg);
   }
+
+  /* "My Goals" reuses the Log Browser's category markup (shared via log-data.js),
+     so it's styled here as an alias of the existing .card family. */
+  details.log-cat { background: linear-gradient(180deg, var(--paper-raised-2), var(--paper-raised)); border: 1px solid var(--line); border-radius: 3px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.35); }
+  .log-cat-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; list-style: none; }
+  .log-cat-head::-webkit-details-marker { display: none; }
+  .log-cat-name { flex: 1; font-weight: 600; font-size: 14.5px; color: var(--ink); }
+  .log-cat-frac { font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); }
+  .log-cat-body { padding: 10px 14px 14px; border-top: 1px solid var(--line); }
+  .empty-state { color: var(--ink-dim); font-size: 13px; }
+  #myGoalsSummary { font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); margin: 8px 0 14px; }
   .log-legend {
     font-family: var(--font-mono);
     font-size: 10.5px;
@@ -452,6 +464,12 @@
       </div>
     </div>
   </header>
+
+  <section>
+    <h2>My Goals <a href="log-browser.html" style="font-size:11px; font-weight:400; text-decoration:none; color:var(--orange-strong); margin-left:auto;">edit in Log Browser &rarr;</a></h2>
+    <p id="myGoalsSummary"></p>
+    <div id="myGoalsList"></div>
+  </section>
 
   <section>
     <h2>Ready to convert <span class="count">0h of farming</span></h2>
@@ -861,3 +879,6 @@
     <span>Data via TempleOSRS API &middot; 20 Sep 2026</span>
   </footer>
 </div>
+
+<script src="log-data.js"></script>
+<script>renderMyGoalsInto('myGoalsList', 'myGoalsSummary');</script>
