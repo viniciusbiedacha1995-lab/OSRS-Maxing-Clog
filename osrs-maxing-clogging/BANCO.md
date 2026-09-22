@@ -41,6 +41,7 @@ Banked completo hoje: 811 (faltam 389). Plano atual fechado: 872.
 ## Brimhaven Agility Arena [confirmado]
 - Log (9): Agility arena ticket, Pirate's hook, 6 peças de graceful (Agility Arena), Brimhaven voucher.
 - Preços: hook 800; recolor 250. Amylase pack (60) e ervas não estão no log.
+- [confirmado via screenshot do jogo] Os 2/9 já obtidos são exatamente **Agility arena ticket** (1.051) e **Brimhaven voucher** (1.050) — só de guardar a quantidade eles já contam no log. Os 7 pendentes: Pirate's hook + as 6 peças de Graceful.
 
 ## Colossal Wyrm Agility Course (8) [confirmado — corrigido]
 - Log real (8): Colossal wyrm teleport scroll, Calcified acorn, e as 6 peças de Graceful (Varlamore) — hood, cape, top, legs, gloves, boots.
