@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSRS Maxing & Clogging — Hash Club</title>
+<style>
+  :root {
+    --ink: #1c2620;
+    --ink-dim: #4c5951;
+    --paper: #eae5d6;
+    --paper-raised: #f4f0e3;
+    --line: #cfc7ae;
+    --brass: #82631f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e9e4d6;
+      --ink-dim: #a9a190;
+      --paper: #141b17;
+      --paper-raised: #1b2420;
+      --line: #333f37;
+      --brass: #d3ac5c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .wrap { max-width: 480px; width: 100%; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  p.sub { color: var(--ink-dim); margin: 0 0 28px; font-size: 14px; }
+  .card {
+    display: block;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .card .title { font-weight: 600; font-size: 16px; }
+  .card .desc { color: var(--ink-dim); font-size: 13px; margin-top: 4px; }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Hash Club &middot; Ironman</div>
+    <h1>OSRS Maxing &amp; Clogging</h1>
+    <p class="sub">Painéis do plano de max e collection log.</p>
+
+    <a class="card" href="osrs-maxing-clogging/dashboard.html">
+      <div class="title">📒 Clog Ledger</div>
+      <div class="desc">Banco de moedas, fila de prioridade dos minigames e checklist do dia do max.</div>
+    </a>
+
+    <a class="card" href="osrs-ironman-tracker/index.html">
+      <div class="title">⚔️ Ironman Tracker</div>
+      <div class="desc">Acompanhamento de níveis, XP e metas por skill.</div>
+    </a>
+  </div>
+</body>
+</html>
