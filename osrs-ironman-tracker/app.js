@@ -310,19 +310,22 @@ function setSyncStatus(text, kind) {
 }
 
 // Applies a {skillKey: entry} map to state using a per-source field extractor.
-// Returns how many of our skills were matched and updated.
-function applySkillData(dataMap, extractLevelXp) {
-  let updated = 0;
-  SKILLS.forEach(s => {
+// Only considers skills in `skillsSubset` (defaults to all of them) so a
+// second source can be used to fill in gaps a first source didn't cover,
+// without clobbering data the first source already provided. Returns the
+// list of skill ids actually matched and updated.
+function applySkillData(dataMap, extractLevelXp, skillsSubset) {
+  const matched = [];
+  (skillsSubset || SKILLS).forEach(s => {
     const entry = findSkillEntry(dataMap, s);
     if (!entry) return;
     const { level, xp: xpRaw } = extractLevelXp(entry);
     if (!Number.isFinite(level) || level < 1) return;
     const xp = Number.isFinite(xpRaw) && xpRaw > 0 ? xpRaw : xpForLevel(level);
     state.skills[s.id] = { level: Math.min(MAX_LEVEL, level), xp };
-    updated++;
+    matched.push(s.id);
   });
-  return updated;
+  return matched;
 }
 
 // Wise Old Man (wiseoldman.net): a community player-tracking API built for
@@ -349,9 +352,10 @@ function extractWomSkills(json) {
     || null;
 }
 
-// TempleOSRS doesn't send CORS headers, so a direct browser fetch gets rejected.
-// Try it straight first (works if that ever changes), then fall back to a public
-// CORS proxy that just relays the same response.
+// TempleOSRS and the official Hiscores don't send CORS headers, so a direct
+// browser fetch gets rejected. Try it straight first (works if that ever
+// changes), then fall back to a public CORS proxy that just relays the
+// same response.
 async function fetchWithCorsFallback(url) {
   try {
     const direct = await fetch(url);
@@ -363,46 +367,96 @@ async function fetchWithCorsFallback(url) {
   return proxied;
 }
 
+// Jagex's own Hiscores — most likely to have brand-new content (like a
+// freshly released skill) before third-party trackers add support for it.
+async function fetchOfficialHiscores(rsn) {
+  const url = `https://secure.runescape.com/m=hiscore_oldschool/index_lite.json?player=${encodeURIComponent(rsn)}`;
+  const res = await fetchWithCorsFallback(url);
+  return res.json();
+}
+
+function extractOfficialSkillsMap(json) {
+  if (!json || !Array.isArray(json.skills)) return null;
+  const map = {};
+  json.skills.forEach(sk => { if (sk && sk.name) map[sk.name] = sk; });
+  return map;
+}
+
+// Tries every source and merges results, instead of stopping at the first
+// one that returns anything — a source that's missing a brand-new skill
+// (e.g. one that hasn't added it to its own metric list yet) shouldn't hide
+// data the other source does have for it.
 async function syncStats(rsn) {
   if (!rsn) return;
   setSyncStatus('Fetching…', 'pending');
 
+  const matchedIds = new Set();
+  const sourcesUsed = [];
+
   try {
     const womJson = await fetchWiseOldMan(rsn);
     const skills = extractWomSkills(womJson);
-    const updated = skills ? applySkillData(skills, entry => ({
-      level: Number(entry.level),
-      xp: Number(entry.experience),
-    })) : 0;
-    if (updated > 0) {
-      saveState();
-      renderAll();
-      setSyncStatus(`Synced ${updated}/${SKILLS.length} skills via Wise Old Man (RSN: ${rsn}).`, 'ok');
-      return;
+    if (skills) {
+      const matched = applySkillData(skills, entry => ({
+        level: Number(entry.level),
+        xp: Number(entry.experience),
+      }));
+      matched.forEach(id => matchedIds.add(id));
+      if (matched.length > 0) sourcesUsed.push('Wise Old Man');
     }
   } catch (womErr) {
-    console.warn('Wise Old Man sync failed, falling back to TempleOSRS:', womErr);
+    console.warn('Wise Old Man sync failed:', womErr);
   }
 
-  try {
-    const res = await fetchWithCorsFallback(`https://templeosrs.com/api/player_stats.php?player=${encodeURIComponent(rsn)}`);
-    const json = await res.json();
-    const data = (json && (json.data || json)) || {};
-    const updated = applySkillData(data, entry => ({
-      level: Number(entry.level),
-      xp: Number(entry.experience ?? entry.xp ?? entry.exp),
-    }));
-
-    if (updated === 0) {
-      setSyncStatus('Got a response, but no skills were recognized on either source. Check the RSN, or edit stats manually.', 'warn');
-      return;
+  let remaining = SKILLS.filter(s => !matchedIds.has(s.id));
+  if (remaining.length > 0) {
+    try {
+      const res = await fetchWithCorsFallback(`https://templeosrs.com/api/player_stats.php?player=${encodeURIComponent(rsn)}`);
+      const json = await res.json();
+      const data = (json && (json.data || json)) || {};
+      const matched = applySkillData(data, entry => ({
+        level: Number(entry.level),
+        xp: Number(entry.experience ?? entry.xp ?? entry.exp),
+      }), remaining);
+      matched.forEach(id => matchedIds.add(id));
+      if (matched.length > 0) sourcesUsed.push('TempleOSRS');
+    } catch (templeErr) {
+      console.warn('TempleOSRS sync failed:', templeErr);
     }
+  }
 
-    saveState();
-    renderAll();
-    setSyncStatus(`Synced ${updated}/${SKILLS.length} skills via TempleOSRS (RSN: ${rsn}).`, 'ok');
-  } catch (err) {
-    setSyncStatus(`Sync failed on every source (${err.message}). You can still edit stats manually.`, 'err');
+  remaining = SKILLS.filter(s => !matchedIds.has(s.id));
+  if (remaining.length > 0) {
+    try {
+      const officialJson = await fetchOfficialHiscores(rsn);
+      const officialMap = extractOfficialSkillsMap(officialJson);
+      if (officialMap) {
+        const matched = applySkillData(officialMap, entry => ({
+          level: Number(entry.level),
+          xp: Number(entry.xp),
+        }), remaining);
+        matched.forEach(id => matchedIds.add(id));
+        if (matched.length > 0) sourcesUsed.push('official Hiscores');
+      }
+    } catch (officialErr) {
+      console.warn('Official Hiscores sync failed:', officialErr);
+    }
+  }
+
+  if (matchedIds.size === 0) {
+    setSyncStatus('Sync failed on every source. Check the RSN, or edit stats manually.', 'err');
+    return;
+  }
+
+  saveState();
+  renderAll();
+
+  const stillMissing = SKILLS.filter(s => !matchedIds.has(s.id)).map(s => s.name);
+  const base = `Synced ${matchedIds.size}/${SKILLS.length} skills via ${sourcesUsed.join(' + ')} (RSN: ${rsn}).`;
+  if (stillMissing.length > 0) {
+    setSyncStatus(`${base} Not found on any source: ${stillMissing.join(', ')} — enter those manually.`, 'warn');
+  } else {
+    setSyncStatus(base, 'ok');
   }
 }
 
