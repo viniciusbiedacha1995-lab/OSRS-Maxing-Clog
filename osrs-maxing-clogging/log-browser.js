@@ -516,35 +516,33 @@ function renderCategories() {
 function renderMyGoals() {
   const list = document.getElementById('myGoalsList');
   const summary = document.getElementById('myGoalsSummary');
-  const rows = [];
 
-  CATEGORIES.forEach(cat => {
-    cat.items.forEach(item => {
-      if (isSelected(cat.id, item)) {
-        rows.push({ cat, item });
-      }
-    });
-  });
+  const byCat = CATEGORIES.map(cat => ({
+    cat,
+    items: cat.items.filter(item => isSelected(cat.id, item)),
+  })).filter(g => g.items.length > 0);
 
-  if (rows.length === 0) {
+  const total = byCat.reduce((n, g) => n + g.items.length, 0);
+
+  if (total === 0) {
     list.innerHTML = '<p class="empty-state">No goals saved yet. Open a category below, adjust the checkboxes, and hit Save.</p>';
     summary.textContent = '0 items targeted';
     return;
   }
 
-  const obtainedCount = rows.filter(r => r.item.obtained === true).length;
-  summary.textContent = `${rows.length} items targeted \u00b7 ${obtainedCount} already obtained \u00b7 ${rows.length - obtainedCount} still needed`;
+  const obtainedCount = byCat.reduce((n, g) => n + g.items.filter(i => i.obtained === true).length, 0);
+  summary.textContent = `${total} items targeted \u00b7 ${obtainedCount} already obtained \u00b7 ${total - obtainedCount} still needed`;
 
-  list.innerHTML = rows.map(({ cat, item }) => {
-    const cls = statusClass(item.obtained);
+  list.innerHTML = byCat.map(({ cat, items }) => {
+    const obtained = items.filter(i => i.obtained === true).length;
+    const tiles = items.map(item => {
+      const cls = statusClass(item.obtained);
+      return `<span class="log-item ${cls}" title="${escapeAttr(item.name)} \u2014 ${statusLabel(item.obtained)}"><img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'"></span>`;
+    }).join('');
     return `
-      <div class="goal-row">
-        <span class="log-item ${cls}"><img src="${iconUrl(item)}" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="goal-row-main">
-          <span class="goal-row-name">${item.name}</span>
-          <span class="goal-row-cat">${cat.name}</span>
-        </span>
-        <span class="log-row-status ${cls}">${statusLabel(item.obtained)}</span>
+      <div class="goal-cat">
+        <div class="goal-cat-head"><span class="goal-cat-name">${cat.name}</span><span class="goal-cat-frac">${obtained}/${items.length}</span></div>
+        <div class="log-grid">${tiles}</div>
       </div>
     `;
   }).join('');
